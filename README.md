@@ -62,7 +62,7 @@ The project started as a Basic RAG pipeline and was extended to support hybrid r
                               │
                               ▼
                     Conversation Memory
-🛠️ Tech Stack
+##🛠️ Tech Stack 
 Technology	Purpose
 Python	Application development
 LangChain	RAG components and LLM integration
@@ -73,7 +73,7 @@ Gemini	Answer generation
 PyPDF	PDF document loading
 LangGraph	Planned/extended workflow support
 Git/GitHub	Version control
-📁 Project Structure
+##📁 Project Structure
 advanced-rag/
 │
 ├── ingestion/
@@ -108,7 +108,7 @@ advanced-rag/
 
 The local FAISS vector store and environment files are excluded from Git using .gitignore.
 
-🔍 How Hybrid Retrieval Works
+##🔍 How Hybrid Retrieval Works
 
 Traditional semantic retrieval searches for documents based on their meaning.
 
@@ -138,7 +138,7 @@ User Query
 
 This allows the system to use both semantic similarity and keyword matching.
 
-🧠 Relevance Detection
+##🧠 Relevance Detection
 
 The system also checks whether the question is related to the uploaded document.
 
@@ -169,7 +169,7 @@ Threshold = 1.2
 
 The threshold is empirical and depends on the embedding model and document collection.
 
-💬 Conversation Memory
+##💬 Conversation Memory
 
 The system maintains short-term conversation history.
 
@@ -189,7 +189,7 @@ Assistant:
 
 The question handler detects follow-up patterns and uses the previous question to resolve incomplete follow-up queries.
 
-📄 PDF Processing Pipeline
+##📄 PDF Processing Pipeline
 
 The uploaded PDF goes through the following process:
 
@@ -215,7 +215,7 @@ FAISS Vector Store
 
 BM25 also receives the document chunks to build its keyword index.
 
-🤖 Answer Generation
+##🤖 Answer Generation
 
 Gemini is used as the answer generator.
 
@@ -240,7 +240,7 @@ General Knowledge
 Gemini
    ↓
 General Answer
-⚙️ Setup
+##⚙️ Setup
 1. Clone the repository
 git clone https://github.com/Samyu1904/advanced-rag.git
 2. Open the project
@@ -262,7 +262,7 @@ GEMINI_API_KEY=your_api_key_here
 
 Do not commit the .env file to GitHub.
 
-▶️ Run the Application
+##▶️ Run the Application
 
 Run:
 
@@ -284,7 +284,7 @@ exit
 
 to stop the application.
 
-🧪 Example
+##🧪 Example
 Document-related question
 Question: What are the health effects of air pollution?
 
@@ -297,7 +297,7 @@ Unrelated question
 Question: What is the capital of France?
 
 Source: General Knowledge
-🔐 Security
+##🔐 Security
 
 The following files are excluded from Git:
 
@@ -310,7 +310,7 @@ __pycache__/
 
 The Gemini API key should always be stored in .env and never directly inside Python source code.
 
-📌 Current Project Stage
+##📌 Current Project Stage
 
 Current implementation:
 
@@ -342,7 +342,7 @@ Corrective RAG
 Agentic RAG
 Multimodal RAG
 Graph RAG
-👩‍💻 Author
+##👩‍💻 Author
 
 Thadikamalla Sai Madhu Samyuktha
 
