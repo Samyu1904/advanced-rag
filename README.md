@@ -1,3 +1,6 @@
+Absolutely. Copy everything below into your **`README.md`** file:
+
+````markdown
 # Advanced RAG – Hybrid Retrieval System
 
 An advanced Retrieval-Augmented Generation (RAG) system built with Python, LangChain, FAISS, BM25, and Gemini.
@@ -62,18 +65,29 @@ The project started as a Basic RAG pipeline and was extended to support hybrid r
                               │
                               ▼
                     Conversation Memory
-##🛠️ Tech Stack 
-Technology	Purpose
-Python	Application development
-LangChain	RAG components and LLM integration
-FAISS	Semantic vector retrieval
-BM25	Keyword-based retrieval
-Hugging Face	Text embeddings
-Gemini	Answer generation
-PyPDF	PDF document loading
-LangGraph	Planned/extended workflow support
-Git/GitHub	Version control
-##📁 Project Structure
+````
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology   | Purpose                            |
+| ------------ | ---------------------------------- |
+| Python       | Application development            |
+| LangChain    | RAG components and LLM integration |
+| FAISS        | Semantic vector retrieval          |
+| BM25         | Keyword-based retrieval            |
+| Hugging Face | Text embeddings                    |
+| Gemini       | Answer generation                  |
+| PyPDF        | PDF document loading               |
+| LangGraph    | Planned/extended workflow support  |
+| Git/GitHub   | Version control                    |
+
+---
+
+## 📁 Project Structure
+
+```text
 advanced-rag/
 │
 ├── ingestion/
@@ -105,10 +119,13 @@ advanced-rag/
 ├── requirements.txt
 ├── .gitignore
 └── README.md
+```
 
-The local FAISS vector store and environment files are excluded from Git using .gitignore.
+> The local FAISS vector store and environment files are excluded from Git using `.gitignore`.
 
-##🔍 How Hybrid Retrieval Works
+---
+
+## 🔍 How Hybrid Retrieval Works
 
 Traditional semantic retrieval searches for documents based on their meaning.
 
@@ -118,6 +135,7 @@ BM25 performs keyword-based retrieval. It is useful when the exact words used in
 
 This project combines both approaches:
 
+```text
 User Query
     │
     ├──────────────► FAISS
@@ -135,10 +153,13 @@ User Query
                        │
                        ▼
                      Gemini
+```
 
 This allows the system to use both semantic similarity and keyword matching.
 
-##🧠 Relevance Detection
+---
+
+## 🧠 Relevance Detection
 
 The system also checks whether the question is related to the uploaded document.
 
@@ -146,6 +167,7 @@ A configurable FAISS similarity threshold is used.
 
 For example:
 
+```text
 Relevant question:
 "What are the health effects of air pollution?"
 
@@ -155,9 +177,11 @@ Threshold = 1.2
 0.58 <= 1.2
 → Relevant
 → Use PDF context
+```
 
 For an unrelated question:
 
+```text
 "What is the capital of France?"
 
 FAISS score ≈ 1.75
@@ -166,15 +190,19 @@ Threshold = 1.2
 1.75 > 1.2
 → Not relevant
 → Use general knowledge
+```
 
 The threshold is empirical and depends on the embedding model and document collection.
 
-##💬 Conversation Memory
+---
+
+## 💬 Conversation Memory
 
 The system maintains short-term conversation history.
 
 For example:
 
+```text
 User:
 What are the health effects of air pollution?
 
@@ -186,13 +214,17 @@ What about children?
 
 Assistant:
 [Answer using the previous conversation context]
+```
 
 The question handler detects follow-up patterns and uses the previous question to resolve incomplete follow-up queries.
 
-##📄 PDF Processing Pipeline
+---
+
+## 📄 PDF Processing Pipeline
 
 The uploaded PDF goes through the following process:
 
+```text
 PDF
  │
  ▼
@@ -212,15 +244,19 @@ Hugging Face Embeddings
  │
  ▼
 FAISS Vector Store
+```
 
 BM25 also receives the document chunks to build its keyword index.
 
-##🤖 Answer Generation
+---
+
+## 🤖 Answer Generation
 
 Gemini is used as the answer generator.
 
 When the question is relevant to the uploaded PDF:
 
+```text
 Question
    +
 Retrieved PDF Context
@@ -228,9 +264,11 @@ Retrieved PDF Context
 Gemini
    ↓
 Document-based Answer
+```
 
 When the question is unrelated to the PDF:
 
+```text
 Question
    ↓
 Relevance Check
@@ -240,82 +278,140 @@ General Knowledge
 Gemini
    ↓
 General Answer
-##⚙️ Setup
-1. Clone the repository
+```
+
+---
+
+## ⚙️ Setup
+
+### 1. Clone the repository
+
+```bash
 git clone https://github.com/Samyu1904/advanced-rag.git
-2. Open the project
+```
+
+### 2. Open the project
+
+```bash
 cd advanced-rag
-3. Create a virtual environment
+```
+
+### 3. Create a virtual environment
+
+```bash
 python -m venv .venv
-4. Activate the environment
+```
+
+### 4. Activate the environment
 
 Windows:
 
+```bash
 .venv\Scripts\activate
-5. Install dependencies
+```
+
+### 5. Install dependencies
+
+```bash
 pip install -r requirements.txt
-6. Create .env
+```
 
-Create a .env file in the project root:
+### 6. Create `.env`
 
+Create a `.env` file in the project root:
+
+```text
 GEMINI_API_KEY=your_api_key_here
+```
 
-Do not commit the .env file to GitHub.
+Do not commit the `.env` file to GitHub.
 
-##▶️ Run the Application
+---
+
+## ▶️ Run the Application
 
 Run:
 
+```bash
 python app.py
+```
 
 The application asks for the full path of a PDF:
 
+```text
 Enter the full path of your PDF:
+```
 
 Example:
 
+```text
 C:\Users\YourName\Downloads\air-quality-and-health.pdf
+```
 
 After processing the PDF, you can ask questions interactively.
 
 Type:
 
+```text
 exit
+```
 
 to stop the application.
 
-##🧪 Example
-Document-related question
+---
+
+## 🧪 Example
+
+### Document-related question
+
+```text
 Question: What are the health effects of air pollution?
 
 Source: PDF
-Follow-up question
+```
+
+### Follow-up question
+
+```text
 Question: What about children?
 
 Source: PDF
-Unrelated question
+```
+
+### Unrelated question
+
+```text
 Question: What is the capital of France?
 
 Source: General Knowledge
-##🔐 Security
+```
+
+---
+
+## 🔐 Security
 
 The following files are excluded from Git:
 
+```text
 .env
 .venv/
 vectorstore/
 vetorstore/
 __pycache__/
 *.pyc
+```
 
-The Gemini API key should always be stored in .env and never directly inside Python source code.
+The Gemini API key should always be stored in `.env` and never directly inside Python source code.
 
-##📌 Current Project Stage
+---
+
+## 📌 Current Project Stage
 
 Current implementation:
 
-Hybrid RAG
+**Hybrid RAG**
 
+```text
 Basic RAG
     ↓
 FAISS Semantic Retrieval
@@ -329,36 +425,29 @@ Relevance Detection
 Conversation Memory
     ↓
 Gemini Generation
+```
 
 Future improvements can include:
 
-Score normalization and fusion
-Query transformation
-Reranking
-Multi-query retrieval
-Parent-child retrieval
-Self-RAG
-Corrective RAG
-Agentic RAG
-Multimodal RAG
-Graph RAG
-##👩‍💻 Author
+* Score normalization and fusion
+* Query transformation
+* Reranking
+* Multi-query retrieval
+* Parent-child retrieval
+* Self-RAG
+* Corrective RAG
+* Agentic RAG
+* Multimodal RAG
+* Graph RAG
 
-Thadikamalla Sai Madhu Samyuktha
+---
+
+## 👩‍💻 Author
+
+**Thadikamalla Sai Madhu Samyuktha**
 
 GitHub:
-https://github.com/Samyu1904
+[https://github.com/Samyu1904](https://github.com/Samyu1904)
 
-
-### Step 2
-
-Save the file.
-
-Then in Git Bash, run:
-
-```bash
-git status
-
-You should see:
-
-README.md
+```
+```
