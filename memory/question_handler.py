@@ -1,3 +1,4 @@
+
 class QuestionHandler:
 
     def __init__(self, conversation_memory):
@@ -26,6 +27,78 @@ class QuestionHandler:
 
         return False
 
+    def get_original_topic(self):
+
+        history = self.conversation_memory.get_history()
+
+        if not history:
+            return None
+
+        return history[0]["question"]
+
+    def extract_topic(self, question):
+
+        topic = question.strip()
+
+        topic_lower = topic.lower()
+
+        # Remove question prefixes
+        prefixes = [
+            "what is ",
+            "what are ",
+            "tell me about "
+        ]
+
+        for prefix in prefixes:
+
+            if topic_lower.startswith(prefix):
+
+                topic = topic[len(prefix):]
+
+                break
+
+        topic = topic.rstrip("?").strip()
+
+        # -----------------------------------------------
+        # Remove descriptive phrase "health effects of"
+        # -----------------------------------------------
+
+        topic_lower = topic.lower()
+
+        if topic_lower.startswith(
+            "the health effects of "
+        ):
+
+            topic = topic[
+                len("the health effects of "):
+            ]
+
+        elif topic_lower.startswith(
+            "health effects of "
+        ):
+
+            topic = topic[
+                len("health effects of "):
+            ]
+
+        elif topic_lower.startswith(
+            "the effects of "
+        ):
+
+            topic = topic[
+                len("the effects of "):
+            ]
+
+        elif topic_lower.startswith(
+            "effects of "
+        ):
+
+            topic = topic[
+                len("effects of "):
+            ]
+
+        return topic.strip()
+
     def resolve_follow_up(
         self,
         question,
@@ -34,113 +107,161 @@ class QuestionHandler:
 
         question_lower = question.lower().strip()
 
-        # Example:
-        # Previous: What is air pollution?
-        # Follow-up: What are its health effects?
+        # ------------------------------------------------
+        # Always extract the core topic from the original
+        # question.
+        # ------------------------------------------------
 
-        if question_lower.startswith(
-            "what are its"
-        ):
+        topic = self.extract_topic(
+            previous_question
+        )
 
-            topic = previous_question
+        # ------------------------------------------------
+        # WHAT ABOUT
+        # ------------------------------------------------
 
-            if topic.lower().startswith(
-                "what is "
-            ):
-                topic = topic[8:]
+        if question_lower.startswith("what about"):
 
-            elif topic.lower().startswith(
-                "what are "
-            ):
-                topic = topic[9:]
+            subject = question[
+                len("What about"):
+            ].strip()
 
-            return question.replace(
-                "its",
-                topic,
-                1
-            )
-
-        # Example:
-        # Previous: What is Python?
-        # Follow-up: What are its advantages?
-
-        if question_lower.startswith(
-            "what is its"
-        ):
-
-            topic = previous_question
-
-            if topic.lower().startswith(
-                "what is "
-            ):
-                topic = topic[8:]
-
-            return question.replace(
-                "its",
-                topic,
-                1
-            )
-
-        # Example:
-        # Previous: What are the health effects
-        # of air pollution?
-        # Follow-up: What about children?
-
-        if question_lower.startswith(
-            "what about"
-        ):
-
-            topic = previous_question
+            subject = subject.rstrip("?").strip()
 
             return (
                 "What are the effects of "
-                + topic.replace("What are ", "")
+                + topic
                 + " on "
-                + question[11:].strip()
+                + subject
                 + "?"
             )
 
-        # Example:
-        # Previous: What is Python?
-        # Follow-up: What are the keywords?
+        # ------------------------------------------------
+        # HOW ABOUT
+        # ------------------------------------------------
 
-        if question_lower.startswith(
-            "what are the"
-        ):
+        if question_lower.startswith("how about"):
 
-            topic = previous_question
+            subject = question[
+                len("How about"):
+            ].strip()
 
-            if topic.lower().startswith(
-                "what is "
-            ):
-                topic = topic[8:]
+            subject = subject.rstrip("?").strip()
 
             return (
-                question[:-1]
-                + " of "
+                "What are the effects of "
+                + topic
+                + " on "
+                + subject
+                + "?"
+            )
+
+        # ------------------------------------------------
+        # WHAT ARE ITS
+        # ------------------------------------------------
+
+        if question_lower.startswith("what are its"):
+
+            remaining = question[
+                len("What are its"):
+            ].strip()
+
+            remaining = remaining.rstrip("?").strip()
+
+            if remaining:
+
+                return (
+                    "What are "
+                    + remaining
+                    + " of "
+                    + topic
+                    + "?"
+                )
+
+            return (
+                "What are the effects of "
                 + topic
                 + "?"
             )
+
+        # ------------------------------------------------
+        # WHAT IS ITS
+        # ------------------------------------------------
+
+        if question_lower.startswith("what is its"):
+
+            remaining = question[
+                len("What is its"):
+            ].strip()
+
+            remaining = remaining.rstrip("?").strip()
+
+            if remaining:
+
+                return (
+                    "What is "
+                    + remaining
+                    + " of "
+                    + topic
+                    + "?"
+                )
+
+            return (
+                "What is "
+                + topic
+                + "?"
+            )
+
+        # ------------------------------------------------
+        # TELL ME MORE
+        # ------------------------------------------------
+
+        if question_lower.startswith("tell me more"):
+
+            return (
+                "Tell me more about "
+                + topic
+                + "."
+            )
+
+        # ------------------------------------------------
+        # FALLBACK
+        # ------------------------------------------------
 
         return question
 
     def process_question(self, question):
 
+        # -----------------------------------------------
+        # Normal complete question
+        # -----------------------------------------------
+
         if not self.is_incomplete(question):
 
             return question, False
 
-        previous_question = (
-            self.conversation_memory.get_last_question()
+        # -----------------------------------------------
+        # Get conversation history
+        # -----------------------------------------------
+
+        history = (
+            self.conversation_memory.get_history()
         )
 
-        if previous_question is None:
+        if not history:
 
             return None, True
 
+        # -----------------------------------------------
+        # Use the original question as the reference.
+        # -----------------------------------------------
+
+        original_question = history[0]["question"]
+
         resolved_question = self.resolve_follow_up(
             question,
-            previous_question
+            original_question
         )
 
         return resolved_question, False
+

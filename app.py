@@ -1,16 +1,24 @@
 import hashlib
 import json
 from pathlib import Path
+from typing import TypedDict
+
+from langgraph.graph import StateGraph, END
 
 from ingestion.pdf_loader import PDFLoader
 from ingestion.text_splitter import TextSplitter
+from ingestion.parent_child_splitter import ParentChildSplitter
 
 from vectorstore.faiss_store import FAISSVectorStore
+from vectorstore.child_vectorstore import ChildVectorStore
 
 from retrieval.retriever import RAGRetriever
 from retrieval.bm25_retriever import BM25Retriever
 from retrieval.hybrid_retriever import HybridRetriever
 from retrieval.answer_generator import AnswerGenerator
+from retrieval.parent_store import ParentStore
+from retrieval.parent_child_retriever import ParentChildRetriever
+from retrieval.parent_child_answer_generator import ParentChildAnswerGenerator
 
 from memory.question_handler import QuestionHandler
 from memory.conversation_memory import ConversationMemory
@@ -62,6 +70,11 @@ def load_metadata():
 
 def save_metadata(pdf_path, pdf_hash):
 
+    METADATA_PATH.parent.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
     metadata = {
         "pdf_path": str(Path(pdf_path).resolve()),
         "pdf_hash": pdf_hash
@@ -77,17 +90,654 @@ def save_metadata(pdf_path, pdf_hash):
 
 
 # ============================================================
-# 4. Main Application
+# 4. LangGraph State
+# ============================================================
+
+class RAGState(TypedDict):
+
+    question: str
+
+    processed_question: str
+
+    parent_documents: list
+
+    answer: str
+
+    is_relevant: bool
+
+    waiting_for_clarification: bool
+
+
+# ============================================================
+# 5. Build Parent-Child LangGraph
+# ============================================================
+
+def build_parent_child_graph(
+    parent_child_retriever,
+    answer_generator,
+    question_handler,
+    conversation_memory
+):
+
+    # --------------------------------------------------------
+    # Process Question
+    # --------------------------------------------------------
+
+    def process_question_node(state):
+
+        question = state["question"]
+
+        processed_question, needs_clarification = (
+            question_handler.process_question(
+                question
+            )
+        )
+
+        return {
+            "processed_question": (
+                processed_question
+                if processed_question is not None
+                else ""
+            ),
+            "waiting_for_clarification":
+                needs_clarification
+        }
+
+    # --------------------------------------------------------
+    # Question Status Decision
+    # --------------------------------------------------------
+
+    def question_status_decision(state):
+
+        if state["waiting_for_clarification"]:
+
+            return "clarification"
+
+        return "retrieve"
+
+    # --------------------------------------------------------
+    # Clarification
+    # --------------------------------------------------------
+
+    def clarification_node(state):
+
+        return {
+            "answer":
+                "Could you please provide more context for your question?"
+        }
+
+    # --------------------------------------------------------
+    # Retrieve
+    # --------------------------------------------------------
+
+    def retrieve_node(state):
+
+        question = state["processed_question"]
+
+        print("\nSearching Parent-Child chunks...")
+
+        parents = parent_child_retriever.retrieve(
+            question
+        )
+
+        return {
+            "parent_documents": parents,
+            "is_relevant": len(parents) > 0
+        }
+
+    # --------------------------------------------------------
+    # Relevance Decision
+    # --------------------------------------------------------
+
+    def relevance_decision(state):
+
+        if state["is_relevant"]:
+
+            return "pdf_answer"
+
+        return "general_answer"
+
+    # --------------------------------------------------------
+    # PDF Answer
+    # --------------------------------------------------------
+
+    def pdf_answer_node(state):
+
+        print("Source: Parent Document")
+
+        answer = answer_generator.generate_answer(
+            state["processed_question"],
+            state["parent_documents"]
+        )
+
+        return {
+            "answer": answer
+        }
+
+    # --------------------------------------------------------
+    # General Answer
+    # --------------------------------------------------------
+
+    def general_answer_node(state):
+
+        print("Source: General Knowledge")
+
+        answer = answer_generator.generate_general_answer(
+            state["processed_question"]
+        )
+
+        return {
+            "answer": answer
+        }
+
+    # --------------------------------------------------------
+    # Save Memory
+    # --------------------------------------------------------
+
+    def save_memory_node(state):
+
+        if state["processed_question"]:
+
+            conversation_memory.add_conversation(
+                state["processed_question"],
+                state["answer"]
+            )
+
+        return {}
+
+    # ========================================================
+    # Create Graph
+    # ========================================================
+
+    graph = StateGraph(RAGState)
+
+    graph.add_node(
+        "process_question",
+        process_question_node
+    )
+
+    graph.add_node(
+        "clarification",
+        clarification_node
+    )
+
+    graph.add_node(
+        "retrieve",
+        retrieve_node
+    )
+
+    graph.add_node(
+        "pdf_answer",
+        pdf_answer_node
+    )
+
+    graph.add_node(
+        "general_answer",
+        general_answer_node
+    )
+
+    graph.add_node(
+        "save_memory",
+        save_memory_node
+    )
+
+    # ========================================================
+    # Entry
+    # ========================================================
+
+    graph.set_entry_point(
+        "process_question"
+    )
+
+    # ========================================================
+    # Question Decision
+    # ========================================================
+
+    graph.add_conditional_edges(
+        "process_question",
+        question_status_decision,
+        {
+            "clarification": "clarification",
+            "retrieve": "retrieve"
+        }
+    )
+
+    # ========================================================
+    # Clarification
+    # ========================================================
+
+    graph.add_edge(
+        "clarification",
+        END
+    )
+
+    # ========================================================
+    # Retrieval
+    # ========================================================
+
+    graph.add_conditional_edges(
+        "retrieve",
+        relevance_decision,
+        {
+            "pdf_answer": "pdf_answer",
+            "general_answer": "general_answer"
+        }
+    )
+
+    # ========================================================
+    # Answer → Memory
+    # ========================================================
+
+    graph.add_edge(
+        "pdf_answer",
+        "save_memory"
+    )
+
+    graph.add_edge(
+        "general_answer",
+        "save_memory"
+    )
+
+    # ========================================================
+    # Memory → End
+    # ========================================================
+
+    graph.add_edge(
+        "save_memory",
+        END
+    )
+
+    return graph.compile()
+
+
+# ============================================================
+# 6. Run Basic RAG
+# ============================================================
+
+def run_basic_rag(
+    db,
+    question_handler,
+    conversation_memory
+):
+
+    retriever = RAGRetriever(
+        vector_store=db,
+        top_k=3,
+        threshold=1.2
+    )
+
+    answer_generator = AnswerGenerator()
+
+    print("\n========================================")
+    print("             BASIC RAG")
+    print("========================================")
+
+    while True:
+
+        question = input(
+            "\nQuestion: "
+        ).strip()
+
+        if question.lower() == "exit":
+            break
+
+        if not question:
+            print("Please enter a question.")
+            continue
+
+        complete_question, needs_clarification = (
+            question_handler.process_question(
+                question
+            )
+        )
+
+        if needs_clarification:
+
+            print(
+                "\nI need more information."
+            )
+
+            print(
+                "Please complete your question."
+            )
+
+            continue
+
+        question = complete_question
+
+        print("\nSearching...")
+
+        results = retriever.retrieve(
+            question
+        )
+
+        relevant = retriever.is_relevant(
+            results
+        )
+
+        if relevant:
+
+            print("Source: PDF")
+
+            answer = (
+                answer_generator.generate_pdf_answer(
+                    question,
+                    results
+                )
+            )
+
+        else:
+
+            print("Source: General Knowledge")
+
+            answer = (
+                answer_generator.generate_general_answer(
+                    question
+                )
+            )
+
+        conversation_memory.add_conversation(
+            question,
+            answer
+        )
+
+        print("\nAnswer:")
+        print(answer)
+
+        print(
+            "\n----------------------------------------"
+        )
+
+
+# ============================================================
+# 7. Run Hybrid RAG
+# ============================================================
+
+def run_hybrid_rag(
+    hybrid_retriever,
+    answer_generator,
+    question_handler,
+    conversation_memory
+):
+
+    print("\n========================================")
+    print("             HYBRID RAG")
+    print("========================================")
+
+    while True:
+
+        question = input(
+            "\nQuestion: "
+        ).strip()
+
+        if question.lower() == "exit":
+            break
+
+        if not question:
+
+            print(
+                "Please enter a question."
+            )
+
+            continue
+
+        complete_question, needs_clarification = (
+            question_handler.process_question(
+                question
+            )
+        )
+
+        if needs_clarification:
+
+            print(
+                "\nI need more information."
+            )
+
+            print(
+                "Please complete your question."
+            )
+
+            continue
+
+        question = complete_question
+
+        print("\nSearching...")
+
+        results = hybrid_retriever.retrieve(
+            question
+        )
+
+        relevant = len(results) > 0
+
+        if relevant:
+
+            print("Source: PDF")
+
+            answer = (
+                answer_generator.generate_pdf_answer(
+                    question,
+                    results
+                )
+            )
+
+        else:
+
+            print("Source: General Knowledge")
+
+            answer = (
+                answer_generator.generate_general_answer(
+                    question
+                )
+            )
+
+        conversation_memory.add_conversation(
+            question,
+            answer
+        )
+
+        print("\nAnswer:")
+        print(answer)
+
+        print(
+            "\n----------------------------------------"
+        )
+
+
+# ============================================================
+# 8. Run Parent-Child RAG + LangGraph
+# ============================================================
+
+def run_parent_child_rag(
+    documents
+):
+
+    print("\n========================================")
+    print("      PARENT-CHILD RAG + LANGGRAPH")
+    print("========================================")
+
+    # --------------------------------------------------------
+    # Parent / Child Splitting
+    # --------------------------------------------------------
+
+    splitter = ParentChildSplitter(
+        parent_chunk_size=2000,
+        parent_chunk_overlap=200,
+        child_chunk_size=500,
+        child_chunk_overlap=100
+    )
+
+    parents, children = (
+        splitter.split_documents(
+            documents
+        )
+    )
+
+    # --------------------------------------------------------
+    # Parent Store
+    # --------------------------------------------------------
+
+    parent_store = ParentStore(
+        parents
+    )
+
+    # --------------------------------------------------------
+    # Child Vector Store
+    # --------------------------------------------------------
+
+    child_vector_store = ChildVectorStore()
+
+    child_vector_store.create(
+        children
+    )
+
+    # --------------------------------------------------------
+    # Parent-Child Retriever
+    # --------------------------------------------------------
+
+    parent_child_retriever = ParentChildRetriever(
+        child_vector_store=child_vector_store,
+        parent_store=parent_store,
+        top_k=3,
+        threshold=1.2
+    )
+
+    # --------------------------------------------------------
+    # Answer Generator
+    # --------------------------------------------------------
+
+    answer_generator = (
+        ParentChildAnswerGenerator()
+    )
+
+    # --------------------------------------------------------
+    # Conversation Memory
+    # --------------------------------------------------------
+
+    conversation_memory = ConversationMemory(
+        max_history=5
+    )
+
+    # --------------------------------------------------------
+    # Question Handler
+    # --------------------------------------------------------
+
+    question_handler = QuestionHandler(
+        conversation_memory
+    )
+
+    # --------------------------------------------------------
+    # Build LangGraph
+    # --------------------------------------------------------
+
+    graph = build_parent_child_graph(
+        parent_child_retriever,
+        answer_generator,
+        question_handler,
+        conversation_memory
+    )
+
+    print("\nLangGraph workflow is ready!")
+
+    print(
+        "\nType 'exit' to return to the main menu."
+    )
+
+    # ========================================================
+    # Question Loop
+    # ========================================================
+
+    while True:
+
+        question = input(
+            "\nQuestion: "
+        ).strip()
+
+        if question.lower() == "exit":
+
+            print(
+                "\nReturning to main menu..."
+            )
+
+            break
+
+        if not question:
+
+            print(
+                "Please enter a question."
+            )
+
+            continue
+
+        print(
+            "\nRunning LangGraph..."
+        )
+
+        initial_state = {
+
+            "question": question,
+
+            "processed_question": "",
+
+            "parent_documents": [],
+
+            "answer": "",
+
+            "is_relevant": False,
+
+            "waiting_for_clarification": False
+        }
+
+        final_state = graph.invoke(
+            initial_state
+        )
+
+        print("\nProcessed Question:")
+
+        print(
+            final_state["processed_question"]
+        )
+
+        print(
+            "\nWaiting for Clarification:"
+        )
+
+        print(
+            final_state[
+                "waiting_for_clarification"
+            ]
+        )
+
+        print(
+            "\nRelevant to PDF:"
+        )
+
+        print(
+            final_state["is_relevant"]
+        )
+
+        print("\nAnswer:")
+
+        print(
+            final_state["answer"]
+        )
+
+        print(
+            "\n----------------------------------------"
+        )
+
+
+# ============================================================
+# 9. Main Application
 # ============================================================
 
 def main():
 
     print("\n========================================")
-    print("             RAG ASSISTANT")
+    print("           ADVANCED RAG SYSTEM")
     print("========================================")
 
     # ========================================================
-    # 1. Get PDF from User
+    # PDF Input
     # ========================================================
 
     pdf_path = input(
@@ -98,28 +748,46 @@ def main():
 
     if not pdf_file.exists():
 
-        print("\nPDF file not found.")
+        print(
+            "\nPDF file not found."
+        )
 
         return
 
     if pdf_file.suffix.lower() != ".pdf":
 
-        print("\nPlease provide a PDF file.")
+        print(
+            "\nPlease provide a PDF file."
+        )
 
         return
 
     # ========================================================
-    # 2. Calculate PDF Hash
+    # PDF Hash
     # ========================================================
 
-    print("\nChecking PDF...")
+    print(
+        "\nChecking PDF..."
+    )
 
-    pdf_hash = get_file_hash(pdf_path)
+    pdf_hash = get_file_hash(
+        pdf_path
+    )
 
     metadata = load_metadata()
 
     # ========================================================
-    # 3. Create or Load FAISS Vector Store
+    # Load PDF
+    # ========================================================
+
+    pdf_loader = PDFLoader()
+
+    documents = pdf_loader.load_pdf(
+        pdf_path
+    )
+
+    # ========================================================
+    # Create / Load Basic FAISS
     # ========================================================
 
     vector_store = FAISSVectorStore()
@@ -132,54 +800,54 @@ def main():
         and Path(VECTORSTORE_PATH).exists()
     ):
 
-        print("Existing FAISS vector store found.")
-        print("Loading vector store...")
+        print(
+            "\nExisting FAISS vector store found."
+        )
+
+        print(
+            "Loading vector store..."
+        )
 
         db = vector_store.load(
             VECTORSTORE_PATH
         )
 
         # ----------------------------------------------------
-        # Load PDF chunks for BM25
+        # Load chunks for BM25
         # ----------------------------------------------------
 
-        print("Loading PDF chunks for BM25...")
-
-        pdf_loader = PDFLoader()
-
-        documents = pdf_loader.load_pdf(
-            pdf_path
+        print(
+            "Loading PDF chunks for BM25..."
         )
 
         text_splitter = TextSplitter()
 
-        chunks = text_splitter.split_documents(
-            documents
+        chunks = (
+            text_splitter.split_documents(
+                documents
+            )
         )
 
     else:
 
-        print("New PDF detected.")
-        print("Creating FAISS vector store...")
+        print(
+            "\nNew PDF detected."
+        )
 
-        # ----------------------------------------------------
-        # Load PDF
-        # ----------------------------------------------------
-
-        pdf_loader = PDFLoader()
-
-        documents = pdf_loader.load_pdf(
-            pdf_path
+        print(
+            "Creating FAISS vector store..."
         )
 
         # ----------------------------------------------------
-        # Split PDF into chunks
+        # Split PDF
         # ----------------------------------------------------
 
         text_splitter = TextSplitter()
 
-        chunks = text_splitter.split_documents(
-            documents
+        chunks = (
+            text_splitter.split_documents(
+                documents
+            )
         )
 
         # ----------------------------------------------------
@@ -203,10 +871,12 @@ def main():
             pdf_hash
         )
 
-        print("FAISS vector store saved.")
+        print(
+            "FAISS vector store saved."
+        )
 
     # ========================================================
-    # 4. Create FAISS Retriever
+    # Create Hybrid Components
     # ========================================================
 
     retriever = RAGRetriever(
@@ -215,17 +885,9 @@ def main():
         threshold=1.2
     )
 
-    # ========================================================
-    # 5. Create BM25 Retriever
-    # ========================================================
-
     bm25_retriever = BM25Retriever(
         documents=chunks
     )
-
-    # ========================================================
-    # 6. Create Hybrid Retriever
-    # ========================================================
 
     hybrid_retriever = HybridRetriever(
         faiss_retriever=retriever,
@@ -233,133 +895,118 @@ def main():
         top_k=3
     )
 
-    # ========================================================
-    # 7. Create Answer Generator
-    # ========================================================
-
     answer_generator = AnswerGenerator()
 
     # ========================================================
-    # 8. Create Conversation Memory
-    # ========================================================
-
-    conversation_memory = ConversationMemory(
-        max_history=5
-    )
-
-    # ========================================================
-    # 9. Create Question Handler
-    # ========================================================
-
-    question_handler = QuestionHandler(
-        conversation_memory
-    )
-
-    print("\n========================================")
-    print("PDF is ready!")
-    print("FAISS + BM25 Hybrid Retrieval is ready!")
-    print("Type 'exit' to stop.")
-    print("========================================")
-
-    # ========================================================
-    # 10. Question Loop
+    # Main Menu
     # ========================================================
 
     while True:
 
-        question = input(
-            "\nQuestion: "
+        print("\n========================================")
+        print("              SELECT MODE")
+        print("========================================")
+
+        print(
+            "1. Basic RAG"
+        )
+
+        print(
+            "2. Hybrid RAG"
+        )
+
+        print(
+            "3. Parent-Child RAG + LangGraph"
+        )
+
+        print(
+            "4. Exit"
+        )
+
+        choice = input(
+            "\nEnter your choice: "
         ).strip()
 
-        # ----------------------------------------------------
+        # ====================================================
+        # Basic RAG
+        # ====================================================
+
+        if choice == "1":
+
+            conversation_memory = (
+                ConversationMemory(
+                    max_history=5
+                )
+            )
+
+            question_handler = (
+                QuestionHandler(
+                    conversation_memory
+                )
+            )
+
+            run_basic_rag(
+                db,
+                question_handler,
+                conversation_memory
+            )
+
+        # ====================================================
+        # Hybrid RAG
+        # ====================================================
+
+        elif choice == "2":
+
+            conversation_memory = (
+                ConversationMemory(
+                    max_history=5
+                )
+            )
+
+            question_handler = (
+                QuestionHandler(
+                    conversation_memory
+                )
+            )
+
+            run_hybrid_rag(
+                hybrid_retriever,
+                answer_generator,
+                question_handler,
+                conversation_memory
+            )
+
+        # ====================================================
+        # Parent-Child + LangGraph
+        # ====================================================
+
+        elif choice == "3":
+
+            run_parent_child_rag(
+                documents
+            )
+
+        # ====================================================
         # Exit
-        # ----------------------------------------------------
+        # ====================================================
 
-        if question.lower() == "exit":
+        elif choice == "4":
 
-            print("\nExiting RAG Assistant...")
+            print(
+                "\nExiting Advanced RAG System..."
+            )
 
             break
 
-        # ----------------------------------------------------
-        # Empty Question
-        # ----------------------------------------------------
-
-        if not question:
-
-            print("Please enter a question.")
-
-            continue
-
-        # ====================================================
-        # 11. Check Question Completeness
-        # ====================================================
-
-        complete_question, needs_clarification = (
-            question_handler.process_question(
-                question
-            )
-        )
-
-        if needs_clarification:
-
-            print("\nI need more information.")
-            print("Please complete your question.")
-
-            continue
-
-        question = complete_question
-
-        # ====================================================
-        # 12. Hybrid Retrieval
-        # ====================================================
-
-        print("\nSearching...")
-
-        results = hybrid_retriever.retrieve(
-            question
-        )
-
-        relevant = len(results) > 0
-
-        # ====================================================
-        # 13. Generate Answer
-        # ====================================================
-
-        if relevant:
-
-            print("Source: PDF")
-
-            answer = answer_generator.generate_pdf_answer(
-                question,
-                results
-            )
-
         else:
 
-            print("Source: General Knowledge")
-
-            answer = answer_generator.generate_general_answer(
-                question
+            print(
+                "\nInvalid choice."
             )
 
-        # ====================================================
-        # 14. Save Conversation
-        # ====================================================
-
-        conversation_memory.add_conversation(
-            question,
-            answer
-        )
-
-        # ====================================================
-        # 15. Display Answer
-        # ====================================================
-
-        print("\nAnswer:")
-        print(answer)
-
-        print("\n----------------------------------------")
+            print(
+                "Please select 1, 2, 3, or 4."
+            )
 
 
 # ============================================================
@@ -367,4 +1014,5 @@ def main():
 # ============================================================
 
 if __name__ == "__main__":
+
     main()
