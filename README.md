@@ -1,6 +1,6 @@
-# Advanced RAG System
+# Parent-Child RAG System
 
-An Advanced Retrieval-Augmented Generation (RAG) system built with **Python, LangChain, FAISS, Hugging Face embeddings, Gemini, BM25, Parent-Child Retrieval, Conversation Memory, and LangGraph**.
+An Parent-Child Retrieval-Augmented Generation (RAG) system built with **Python, LangChain, FAISS, Hugging Face embeddings, Gemini, BM25, Parent-Child Retrieval, Conversation Memory, and LangGraph**.
 
 The project demonstrates how a RAG system can evolve from basic semantic retrieval to hybrid retrieval and finally to a **Parent-Child RAG architecture with LangGraph-based workflow orchestration**.
 
