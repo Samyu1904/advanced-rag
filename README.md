@@ -1,6 +1,6 @@
-# Advanced RAG – Hybrid Retrieval System
+# Hybrid RAG – Hybrid Retrieval System
 
-An advanced Retrieval-Augmented Generation (RAG) system built with Python, LangChain, FAISS, BM25, and Gemini.
+An hybrid Retrieval-Augmented Generation (RAG) system built with Python, LangChain, FAISS, BM25, and Gemini.
 
 The project started as a Basic RAG pipeline and was extended to support hybrid retrieval, relevance detection, conversation memory, and follow-up questions.
 
