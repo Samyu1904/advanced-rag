@@ -1,3 +1,4 @@
+from pathlib import Path
 
 from ingestion.pdf_loader import PDFLoader
 from ingestion.text_splitter import TextSplitter
@@ -8,20 +9,10 @@ from retrieval.reranker import DocumentReranker
 
 from vectorstore.faiss_store import FAISSVectorStore
 
-from advanced.advanced_reranking_retriever import (
-    AdvancedRerankingRetriever
-)
-
-from advanced.advanced_answer_generator import (
-    AdvancedAnswerGenerator
-)
-
-from advanced.advanced_pipeline import (
-    AdvancedRAGPipeline
-)
+from crag.crag_pipeline import CRAGPipeline
 
 
-class AdvancedRAGApplication:
+class CRAGApplication:
 
     def __init__(self):
 
@@ -34,25 +25,36 @@ class AdvancedRAGApplication:
         self.bm25_retriever = None
         self.reranker = None
 
-        self.advanced_retriever = None
-        self.answer_generator = None
         self.pipeline = None
 
-    def setup(self):
+    # =========================================================
+    # STEP 1 - LOAD PDF
+    # =========================================================
 
+    def load_pdf(self):
+
+        print("\n")
         print("=" * 70)
-        print("ADVANCED RAG")
+        print("                         CRAG")
         print("=" * 70)
-
-        # -----------------------------------------------------
-        # STEP 1 - DYNAMIC PDF IMPORT
-        # -----------------------------------------------------
-
-        print("\nEnter the PDF file path.")
 
         pdf_path = input(
-            "\nPDF path: "
+            "\nEnter the full path of your PDF: "
         ).strip()
+
+        pdf_file = Path(pdf_path)
+
+        if not pdf_file.exists():
+
+            print("\nPDF file not found.")
+
+            return False
+
+        if pdf_file.suffix.lower() != ".pdf":
+
+            print("\nPlease provide a PDF file.")
+
+            return False
 
         print("\nLoading PDF...")
 
@@ -62,9 +64,13 @@ class AdvancedRAGApplication:
             pdf_path
         )
 
-        # -----------------------------------------------------
-        # STEP 2 - TEXT CHUNKING
-        # -----------------------------------------------------
+        return True
+
+    # =========================================================
+    # STEP 2 - CHUNK DOCUMENT
+    # =========================================================
+
+    def create_chunks(self):
 
         print("\nSplitting document...")
 
@@ -77,9 +83,11 @@ class AdvancedRAGApplication:
             self.documents
         )
 
-        # -----------------------------------------------------
-        # STEP 3 - FAISS VECTOR STORE
-        # -----------------------------------------------------
+    # =========================================================
+    # STEP 3 - CREATE FAISS
+    # =========================================================
+
+    def create_faiss(self):
 
         print("\nCreating FAISS vector store...")
 
@@ -95,9 +103,11 @@ class AdvancedRAGApplication:
             threshold=1.2
         )
 
-        # -----------------------------------------------------
-        # STEP 4 - BM25
-        # -----------------------------------------------------
+    # =========================================================
+    # STEP 4 - CREATE BM25
+    # =========================================================
+
+    def create_bm25(self):
 
         print("\nCreating BM25 retriever...")
 
@@ -105,83 +115,82 @@ class AdvancedRAGApplication:
             self.chunks
         )
 
-        # -----------------------------------------------------
-        # STEP 5 - CROSS-ENCODER RERANKER
-        # -----------------------------------------------------
+    # =========================================================
+    # STEP 5 - LOAD RERANKER
+    # =========================================================
+
+    def create_reranker(self):
 
         print("\nLoading Cross-Encoder reranker...")
 
         self.reranker = DocumentReranker()
 
-        # -----------------------------------------------------
-        # STEP 6 - ADVANCED RETRIEVER
-        # -----------------------------------------------------
+    # =========================================================
+    # STEP 6 - CREATE CRAG PIPELINE
+    # =========================================================
 
-        print(
-            "\nCreating Advanced Reranking Retriever..."
-        )
+    def create_pipeline(self):
 
-        self.advanced_retriever = (
-            AdvancedRerankingRetriever(
-                faiss_retriever=self.faiss_retriever,
-                bm25_retriever=self.bm25_retriever,
-                reranker=self.reranker,
-                top_k=3,
-                candidate_k=10
-            )
-        )
+        print("\nCreating CRAG pipeline...")
 
-        # -----------------------------------------------------
-        # STEP 7 - ANSWER GENERATOR
-        # -----------------------------------------------------
-
-        print(
-            "\nCreating Advanced Answer Generator..."
-        )
-
-        self.answer_generator = (
-            AdvancedAnswerGenerator()
-        )
-
-        # -----------------------------------------------------
-        # STEP 8 - COMPLETE PIPELINE
-        # -----------------------------------------------------
-
-        print(
-            "\nCreating Advanced RAG Pipeline..."
-        )
-
-        self.pipeline = AdvancedRAGPipeline(
+        self.pipeline = CRAGPipeline(
             faiss_retriever=self.faiss_retriever,
-            advanced_retriever=self.advanced_retriever,
-            answer_generator=self.answer_generator
+            bm25_retriever=self.bm25_retriever,
+            reranker=self.reranker
         )
 
-        print("\n" + "=" * 70)
-        print("ADVANCED RAG READY")
+    # =========================================================
+    # COMPLETE SETUP
+    # =========================================================
+
+    def setup(self):
+
+        if not self.load_pdf():
+
+            return False
+
+        self.create_chunks()
+
+        self.create_faiss()
+
+        self.create_bm25()
+
+        self.create_reranker()
+
+        self.create_pipeline()
+
+        print("\n")
+        print("=" * 70)
+        print("                    CRAG READY")
         print("=" * 70)
 
-        print(
-            "\nYour document is ready for questions."
-        )
+        print("\nYour document is ready for questions.")
+
+        return True
+
+    # =========================================================
+    # CRAG CHAT
+    # =========================================================
 
     def chat(self):
 
         print("\n")
         print("=" * 70)
-        print("ADVANCED RAG CHAT")
+        print("                       CRAG CHAT")
         print("=" * 70)
 
         print("\nCommands:")
-        print("  clear  -> clear conversation memory")
-        print("  exit   -> exit Advanced RAG")
+        print("  history -> show conversation history")
+        print("  clear   -> clear conversation memory")
+        print("  exit    -> exit CRAG")
 
+        
         while True:
 
             print("\n")
 
             question = input(
-                "Enter your question: "
+                "Question: "
             ).strip()
 
             if not question:
@@ -195,10 +204,16 @@ class AdvancedRAGApplication:
             if question.lower() == "exit":
 
                 print(
-                    "\nExiting Advanced RAG..."
+                    "\nExiting CRAG..."
                 )
 
                 break
+
+            if question.lower() == "history":
+
+                self.pipeline.show_history()
+
+                continue
 
             if question.lower() == "clear":
 
@@ -225,21 +240,31 @@ class AdvancedRAGApplication:
                     "\nPlease check the error above."
                 )
 
+    # =========================================================
+    # RUN APPLICATION
+    # =========================================================
+
+    def run(self):
+
+        if not self.setup():
+
+            return
+
+        self.chat()
+
 
 def main():
 
-    application = AdvancedRAGApplication()
+    application = CRAGApplication()
 
     try:
 
-        application.setup()
-
-        application.chat()
+        application.run()
 
     except KeyboardInterrupt:
 
         print(
-            "\n\nAdvanced RAG stopped by user."
+            "\n\nCRAG stopped by user."
         )
 
     except Exception as error:
