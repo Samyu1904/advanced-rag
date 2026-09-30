@@ -1,469 +1,359 @@
-# Advanced RAG – Hybrid Retrieval System
+# Advanced RAG System
 
-An advanced Retrieval-Augmented Generation (RAG) system built with Python, LangChain, FAISS, BM25, and Gemini.
+An **Advanced Retrieval-Augmented Generation (RAG)** system built with Python, LangChain, FAISS, BM25, Multi-Query Retrieval, Cross-Encoder Reranking, Gemini, and conversational memory.
 
-The project started as a Basic RAG pipeline and was extended to support hybrid retrieval, relevance detection, conversation memory, and follow-up questions.
-
----
-
-## 🚀 Features
-
-- PDF document ingestion
-- Recursive text chunking
-- Hugging Face sentence embeddings
-- FAISS semantic/vector search
-- BM25 keyword-based search
-- Hybrid retrieval using FAISS + BM25
-- Relevance detection using FAISS similarity scores
-- Gemini-powered answer generation
-- General knowledge fallback for unrelated questions
-- Conversation memory
-- Follow-up question handling
-- Persistent FAISS vector store
-- Runtime PDF selection
-- Environment variable based API-key management
+This project extends the previous RAG architectures by combining multiple retrieval and ranking techniques into a single advanced pipeline for more reliable document question answering.
 
 ---
 
-## 🏗️ Architecture
+
+# Project Overview
+
+Traditional RAG retrieves documents using a single retrieval method.
+
+This project progressively builds a more advanced RAG architecture by combining:
+
+* PDF document loading
+* Recursive text splitting
+* Hugging Face embeddings
+* FAISS vector search
+* BM25 keyword search
+* Hybrid retrieval
+* Parent-Child retrieval
+* Cross-Encoder reranking
+* Multi-Query retrieval
+* Conversational memory
+* Follow-up question handling
+* Gemini-based answer generation
+
+The **Advanced RAG** architecture combines Multi-Query Retrieval, Hybrid Retrieval, and Cross-Encoder Reranking before generating the final answer.
+
+---
+
+# RAG Architecture Evolution
+
+The project has been developed progressively through multiple RAG architectures.
 
 ```text
-                         User Question
-                              │
-                              ▼
-                     Question Handler
-                              │
-                              ▼
-                      Hybrid Retriever
-                       ┌──────┴──────┐
-                       │             │
-                       ▼             ▼
-                    FAISS          BM25
-                  Semantic        Keyword
-                   Search         Search
-                       │             │
-                       └──────┬──────┘
-                              │
-                              ▼
-                     Relevance Check
-                       ┌──────┴──────┐
-                       │             │
-                    Relevant     Not Relevant
-                       │             │
-                       ▼             ▼
-                 PDF Context   General Knowledge
-                       │             │
-                       └──────┬──────┘
-                              ▼
-                            Gemini
-                              │
-                              ▼
-                           Answer
-                              │
-                              ▼
-                    Conversation Memory
+Basic RAG
+   ↓
+Hybrid RAG
+   ↓
+Parent-Child RAG + LangGraph
+   ↓
+Reranking RAG
+   ↓
+Advanced RAG
+   ↓
+CRAG
+   ↓
+Future RAG Architectures
+```
+
+The `advanced/` folder contains the implementation of the Advanced RAG layer.
+
+---
+
+# Advanced RAG Architecture
+
+The Advanced RAG pipeline follows this workflow:
+
+```text
+                    User Question
+                          │
+                          ▼
+                Conversation Memory
+                          │
+                          ▼
+                Follow-up Detection
+                          │
+                          ▼
+                 Contextual Question
+                          │
+                          ▼
+                Document Relevance Check
+                          │
+                          ▼
+                 Multi-Query Generation
+                          │
+             ┌────────────┴────────────┐
+             ▼                         ▼
+        FAISS Retrieval            BM25 Retrieval
+             │                         │
+             └────────────┬────────────┘
+                          ▼
+                 Candidate Documents
+                          │
+                          ▼
+              Cross-Encoder Reranking
+                          │
+                          ▼
+                 Top Relevant Documents
+                          │
+                          ▼
+                Gemini Answer Generator
+                          │
+                          ▼
+                    Final Answer
+                          │
+                          ▼
+                Conversation Memory
 ```
 
 ---
 
-## 🧠 How Hybrid Retrieval Works
+# Main Advanced RAG Components
 
-This project combines two different retrieval techniques:
+## 1. Multi-Query Retrieval
 
-### 1. FAISS Semantic Search
+A single user question may not match the wording used in the document.
 
-FAISS is used for semantic/vector-based retrieval.
-
-The PDF text is converted into vector embeddings using:
-
-```text
-sentence-transformers/all-MiniLM-L6-v2
-```
-
-FAISS then searches for document chunks that are semantically similar to the user's question.
-
-This helps when the question uses different words but has a similar meaning to the document content.
-
----
-
-### 2. BM25 Keyword Search
-
-BM25 is used for keyword-based retrieval.
-
-It looks for important words from the user's question inside the document chunks.
+The Multi-Query component uses Gemini to generate multiple search queries representing the same information need from different perspectives.
 
 For example:
 
 ```text
-Question:
-health effects of air pollution
+Original Question
+        ↓
+Query 1
+Query 2
+Query 3
+        ↓
+Document Retrieval
 ```
 
-BM25 can directly match keywords such as:
+This improves the possibility of finding relevant information when the user's wording differs from the document wording.
+
+### File
 
 ```text
-health
-effects
-air
-pollution
+advanced/multi_query_retriever.py
 ```
-
-This provides a different retrieval signal from semantic search.
 
 ---
 
-### 3. Hybrid Retrieval
+# 2. Advanced Retriever
 
-The system combines results from:
+The Advanced Retriever combines:
+
+* Multi-Query generation
+* FAISS retrieval
+* BM25 retrieval
+* Candidate document collection
+* Duplicate removal
+
+The generated queries are sent through both semantic and keyword retrieval systems.
 
 ```text
-FAISS
-+
-BM25
+User Question
+      ↓
+Multiple Queries
+      ↓
+ ┌───────────────┐
+ │               │
+ ▼               ▼
+FAISS           BM25
+ │               │
+ └───────┬───────┘
+         ▼
+Candidate Documents
+         ↓
+Duplicate Removal
+         ↓
+Selected Candidates
 ```
 
-Duplicate document chunks are removed.
+### File
 
-The final set of document chunks is then passed to the answer-generation stage.
-
-The current implementation gives FAISS results priority when combining the two retrieval outputs.
+```text
+advanced/advanced_retriever.py
+```
 
 ---
 
-## 🎯 Relevance Detection
+# 3. Cross-Encoder Reranking
 
-The system uses the FAISS similarity score to determine whether a question is related to the uploaded PDF.
+Retrieval systems may return several potentially relevant documents.
 
-The current threshold is:
-
-```text
-1.2
-```
-
-The threshold is configurable and was selected empirically for this project.
-
-### Example: Relevant Question
+The Cross-Encoder reranker evaluates the relationship between:
 
 ```text
-Question:
-What are the health effects of air pollution?
+Question + Document
 ```
 
-Example FAISS score:
+and assigns a relevance score.
+
+The candidates are then sorted according to the reranker scores.
+
+### Model
 
 ```text
-0.58
+cross-encoder/ms-marco-MiniLM-L-6-v2
 ```
 
-Since:
+### File
 
 ```text
-0.58 <= 1.2
+retrieval/reranker.py
 ```
-
-the question is considered relevant.
-
-The system therefore uses:
-
-```text
-PDF Context
-```
-
-to generate the answer.
 
 ---
 
-### Example: Unrelated Question
+# 4. Advanced Reranking Retriever
+
+This component combines the Advanced Retriever with the Cross-Encoder reranker.
+
+Workflow:
 
 ```text
-Question:
-What is the capital of France?
+Multi-Query Retrieval
+        ↓
+FAISS + BM25
+        ↓
+Candidate Documents
+        ↓
+Cross-Encoder
+        ↓
+Reranked Documents
+        ↓
+Top K Documents
 ```
 
-Example FAISS score:
+### File
 
 ```text
-1.75
+advanced/advanced_reranking_retriever.py
 ```
-
-Since:
-
-```text
-1.75 > 1.2
-```
-
-the question is considered unrelated to the PDF.
-
-The system therefore uses:
-
-```text
-General Knowledge
-```
-
-to answer the question.
 
 ---
 
-## 💬 Conversation Memory
+# 5. Advanced Answer Generator
 
-The system maintains short-term conversation history.
+The final retrieved documents are passed to Gemini to generate the answer.
 
-The current configuration stores the last:
+The generator instructs Gemini to:
+
+* Use the retrieved document context
+* Avoid inventing information
+* Give a clear answer
+* Avoid exposing internal retrieval details
+* State when the required information cannot be found
+
+### File
 
 ```text
-5 conversations
+advanced/advanced_answer_generator.py
 ```
 
-Each conversation contains:
+---
 
-```text
-Question
-Answer
-```
+# 6. Conversational Memory
 
-This allows the system to understand follow-up questions.
+The system maintains recent conversation history.
 
-For example:
+This allows the application to handle follow-up questions such as:
 
 ```text
 User:
 What are the health effects of air pollution?
 
-Assistant:
-Air pollution can affect respiratory and cardiovascular health...
-```
-
-Then the user can ask:
-
-```text
+User:
 What about children?
 ```
 
-The system recognizes this as a follow-up question and uses the previous conversation context to resolve it.
+The second question can be interpreted using the context of the previous question.
+
+### Existing component
+
+```text
+memory/conversation_memory.py
+```
 
 ---
 
-## 🔄 Follow-Up Question Handling
+# 7. Advanced Question Handler
 
-The project contains a question handler that detects incomplete questions.
+The Advanced Question Handler detects follow-up questions and creates a contextual search question.
 
-Examples include:
-
-```text
-What about children?
-How about this?
-What are its effects?
-Tell me more.
-More about this.
-```
-
-If the user asks an incomplete question after a previous question, the system attempts to resolve the follow-up using the previous question stored in conversation memory.
-
-Example:
+For example:
 
 ```text
-Previous question:
+Previous:
 What are the health effects of air pollution?
 
 Follow-up:
 What about children?
 ```
 
-The system converts the follow-up into a more complete question before performing retrieval.
-
-This improves retrieval because the retriever receives a question containing the required context.
-
----
-
-## 📄 PDF Processing Pipeline
-
-The PDF processing pipeline contains three major stages.
-
-### Step 1 – PDF Loading
-
-The system uses LangChain's:
+The system creates a contextual search question similar to:
 
 ```text
-PyPDFLoader
+What are the health effects of air pollution?
+with specific focus on what about children?
 ```
 
-to load the PDF document.
-
-The loader extracts the text page by page.
-
----
-
-### Step 2 – Text Splitting
-
-The extracted text is divided into smaller chunks using:
+### File
 
 ```text
-RecursiveCharacterTextSplitter
-```
-
-Current configuration:
-
-```text
-Chunk Size: 1000
-Chunk Overlap: 200
-```
-
-The overlap helps preserve context between neighboring chunks.
-
----
-
-### Step 3 – Embeddings
-
-Each document chunk is converted into a numerical vector using:
-
-```text
-sentence-transformers/all-MiniLM-L6-v2
-```
-
-These vectors are then stored in FAISS for semantic retrieval.
-
----
-
-## 🗄️ Persistent Vector Store
-
-The project saves the FAISS index locally so that the vector store does not need to be recreated every time the application starts.
-
-The vector store is stored in:
-
-```text
-vectorstore/current_index
-```
-
-The application calculates a SHA-256 hash of the uploaded PDF.
-
-If the same PDF is used again, the existing FAISS index can be loaded instead of recreating the embeddings.
-
-If a different PDF is provided, the application creates a new vector store.
-
-Metadata is stored in:
-
-```text
-vectorstore/current_index/metadata.json
-```
-
-The metadata contains:
-
-```text
-PDF path
-PDF hash
+advanced/advanced_question_handler.py
 ```
 
 ---
 
-## 🤖 Answer Generation
+# 8. Advanced RAG Pipeline
 
-Gemini is used as the Large Language Model for generating answers.
-
-The project uses:
+The complete Advanced RAG workflow is controlled by:
 
 ```text
-gemini-3.6-flash
+advanced/advanced_pipeline.py
 ```
 
-The system has two answer-generation paths.
+The pipeline handles:
 
-### PDF-Based Answer
-
-When the question is relevant to the uploaded document:
-
-```text
-User Question
-      ↓
-Hybrid Retrieval
-      ↓
-Relevant Document Chunks
-      ↓
-Gemini
-      ↓
-Answer
-```
-
-The Gemini prompt instructs the model to use only the retrieved document context.
+1. User question
+2. Follow-up detection
+3. Contextual question creation
+4. Document relevance checking
+5. Advanced retrieval
+6. Cross-Encoder reranking
+7. Answer generation
+8. Conversation memory
 
 ---
 
-### General Knowledge Answer
-
-When the question is not related to the uploaded document:
-
-```text
-User Question
-      ↓
-Relevance Check
-      ↓
-Not Related to PDF
-      ↓
-Gemini General Knowledge
-      ↓
-Answer
-```
-
-This allows the application to continue answering general questions instead of returning an unnecessary "not found" response.
-
----
-
-## 🔐 Security
-
-The Gemini API key is not stored directly in the Python source code.
-
-Instead, it is stored in an environment file:
-
-```text
-.env
-```
-
-Example:
-
-```text
-GEMINI_API_KEY=your_api_key_here
-```
-
-The `.env` file is excluded from Git using `.gitignore`.
-
-The API key should never be committed to GitHub.
-
----
-
-## 🛠️ Tech Stack
-
-| Technology | Purpose |
-|------------|---------|
-| Python | Programming language |
-| LangChain | RAG framework and document processing |
-| LangGraph | Graph-based workflow support |
-| FAISS | Vector similarity search |
-| BM25 | Keyword-based retrieval |
-| Hugging Face | Text embeddings |
-| Sentence Transformers | Embedding model |
-| Gemini | LLM / answer generation |
-| PyPDF | PDF text extraction |
-| python-dotenv | Environment variable management |
-
----
-
-## 📁 Project Structure
+# Project Structure
 
 ```text
 advanced-rag/
 │
-├── data/
-│   └── documents/
+├── advanced/
+│   ├── multi_query_retriever.py
+│   ├── advanced_retriever.py
+│   ├── advanced_reranking_retriever.py
+│   ├── advanced_answer_generator.py
+│   ├── advanced_question_handler.py
+│   └── advanced_pipeline.py
 │
 ├── ingestion/
 │   ├── pdf_loader.py
 │   ├── text_splitter.py
-│   └── embeddings.py
+│   ├── embeddings.py
+│   └── parent_child_splitter.py
 │
 ├── retrieval/
 │   ├── retriever.py
+│   ├── answer_generator.py
 │   ├── bm25_retriever.py
 │   ├── hybrid_retriever.py
-│   └── answer_generator.py
+│   ├── reranker.py
+│   ├── reranking_retriever.py
+│   ├── parent_store.py
+│   ├── parent_child_retriever.py
+│   └── parent_child_answer_generator.py
+│
+├── vectorstore/
+│   ├── faiss_store.py
+│   └── child_vectorstore.py
 │
 ├── memory/
 │   ├── conversation_memory.py
@@ -473,10 +363,7 @@ advanced-rag/
 │
 ├── mcp/
 │
-├── vectorstore/
-│   └── current_index/
-│
-├── app.py
+├── app1.py
 ├── config.py
 ├── requirements.txt
 ├── .env
@@ -485,25 +372,284 @@ advanced-rag/
 
 ---
 
-## ⚙️ Setup
+# Technologies Used
 
-### 1. Clone the Repository
+| Technology            | Purpose                                             |
+| --------------------- | --------------------------------------------------- |
+| Python                | Core programming language                           |
+| LangChain             | RAG components and LLM integration                  |
+| LangGraph             | Workflow orchestration used in earlier architecture |
+| FAISS                 | Vector similarity search                            |
+| BM25                  | Keyword-based retrieval                             |
+| Sentence Transformers | Embeddings and Cross-Encoder reranking              |
+| Hugging Face          | Embedding model                                     |
+| Gemini                | Query generation and answer generation              |
+| PyPDF                 | PDF document loading                                |
+| python-dotenv         | Environment variable management                     |
 
-```bash
-git clone https://github.com/Samyu1904/advanced-rag.git
+---
+
+# Models Used
+
+## Embedding Model
+
+```text
+sentence-transformers/all-MiniLM-L6-v2
 ```
 
-Move into the project directory:
+Used for generating document and query embeddings.
 
-```bash
-cd advanced-rag
+---
+
+## Cross-Encoder Model
+
+```text
+cross-encoder/ms-marco-MiniLM-L-6-v2
+```
+
+Used for reranking retrieved candidate documents.
+
+---
+
+## Gemini Model
+
+```text
+gemini-3.6-flash
+```
+
+Used for:
+
+* Multi-query generation
+* Document-based answer generation
+* General answer generation
+
+---
+
+# Document Processing
+
+The application accepts a PDF document at runtime.
+
+The document is processed using the following pipeline:
+
+```text
+PDF
+ ↓
+PyPDFLoader
+ ↓
+Pages
+ ↓
+Recursive Character Text Splitter
+ ↓
+Chunks
+ ↓
+Embeddings
+ ↓
+FAISS
+```
+
+The default text splitting configuration is:
+
+```text
+Chunk Size: 1000
+Chunk Overlap: 200
 ```
 
 ---
 
-### 2. Create a Virtual Environment
+# Retrieval Strategy
 
-Create a Python virtual environment:
+Advanced RAG uses multiple retrieval approaches.
+
+## Semantic Retrieval
+
+FAISS searches documents using vector similarity.
+
+```text
+Question
+   ↓
+Embedding
+   ↓
+FAISS
+   ↓
+Similar Documents
+```
+
+## Keyword Retrieval
+
+BM25 searches using lexical keyword matching.
+
+```text
+Question
+   ↓
+Tokens
+   ↓
+BM25
+   ↓
+Keyword-Matching Documents
+```
+
+## Combined Retrieval
+
+The Advanced Retriever combines candidates from both systems.
+
+```text
+             Question
+                 │
+        ┌────────┴────────┐
+        ▼                 ▼
+      FAISS              BM25
+        │                 │
+        └────────┬────────┘
+                 ▼
+        Candidate Documents
+```
+
+---
+
+# Reranking
+
+After candidate retrieval, the Cross-Encoder evaluates the candidates more directly.
+
+```text
+Candidate Documents
+        ↓
+Cross-Encoder
+        ↓
+Relevance Scores
+        ↓
+Sorted Documents
+        ↓
+Top 3 Documents
+```
+
+The final top documents are then passed to Gemini.
+
+---
+
+# Relevance Handling
+
+Before running the complete Advanced retrieval pipeline, the system performs an initial FAISS relevance check.
+
+If the question is unrelated to the uploaded document, the system can generate a general knowledge response instead of treating irrelevant document chunks as the source.
+
+Example:
+
+```text
+Document:
+Air Quality and Health
+
+Question:
+What is the capital of France?
+```
+
+The system can identify that the question is unrelated to the uploaded document and use the general-answer path.
+
+---
+
+# Follow-Up Questions
+
+The system supports contextual follow-up questions.
+
+Example:
+
+```text
+Question 1:
+What are the health effects of air pollution?
+
+Question 2:
+What about children?
+```
+
+The question handler uses the previous conversation context to create a more complete search question.
+
+This allows the retrieval system to search using the combined context rather than treating the follow-up as an isolated question.
+
+---
+
+# Dynamic PDF Input
+
+The Advanced RAG application does not require a fixed PDF path.
+
+At runtime, the user provides:
+
+```text
+Enter the full path of your PDF:
+```
+
+Example:
+
+```text
+C:\Users\samyu\Downloads\air-quality-and-health.pdf
+```
+
+The application then loads and processes the selected document.
+
+---
+
+# Running Advanced RAG
+
+Activate the virtual environment:
+
+```bash
+.venv\Scripts\Activate.ps1
+```
+
+Run the Advanced RAG application:
+
+```bash
+python app1.py
+```
+
+The application asks for the PDF path at runtime.
+
+Example:
+
+```text
+Enter the full path of your PDF:
+C:\Users\samyu\Downloads\air-quality-and-health.pdf
+```
+
+---
+
+# Available Commands
+
+Inside the Advanced RAG chat:
+
+```text
+clear
+```
+
+Clears the conversation memory.
+
+```text
+exit
+```
+
+Returns from the Advanced RAG application.
+
+---
+
+# Environment Variables
+
+Create a `.env` file in the project root:
+
+```text
+GEMINI_API_KEY=your_gemini_api_key
+```
+
+The API key should not be committed to GitHub.
+
+The `.gitignore` file contains:
+
+```text
+.env
+```
+
+---
+
+# Installation
+
+Create and activate the virtual environment:
 
 ```bash
 python -m venv .venv
@@ -512,14 +658,10 @@ python -m venv .venv
 Activate it on Windows:
 
 ```bash
-.venv\Scripts\activate
+.venv\Scripts\Activate.ps1
 ```
 
----
-
-### 3. Install Dependencies
-
-Install the required Python packages:
+Install the required dependencies:
 
 ```bash
 pip install -r requirements.txt
@@ -527,179 +669,123 @@ pip install -r requirements.txt
 
 ---
 
-### 4. Configure Gemini API Key
+# Advanced RAG Pipeline Summary
 
-Create a `.env` file in the project root:
-
-```text
-GEMINI_API_KEY=your_api_key_here
-```
-
-Replace:
+The complete architecture can be summarized as:
 
 ```text
-your_api_key_here
-```
-
-with your Gemini API key.
-
-Do not commit the `.env` file to GitHub.
-
----
-
-## ▶️ Run the Application
-
-Start the application using:
-
-```bash
-python app.py
-```
-
-The application will ask for the full path of a PDF.
-
-Example:
-
-```text
-Enter the full path of your PDF:
-C:\Users\Samyu\Documents\student-handbook.pdf
-```
-
-The application then loads and processes the PDF.
-
----
-
-## 🧪 Example Usage
-
-### Question Related to the PDF
-
-```text
-Question:
-What are the health effects of air pollution?
-```
-
-The application performs:
-
-```text
-Question
-   ↓
-FAISS Search
-   ↓
-BM25 Search
-   ↓
-Relevance Check
-   ↓
-PDF Context
-   ↓
-Gemini
-   ↓
-Answer
-```
-
-Output:
-
-```text
-Source: PDF
-
-Answer:
-Air pollution can have several effects on human health,
-including respiratory and cardiovascular problems...
+                         USER
+                          │
+                          ▼
+                   User Question
+                          │
+                          ▼
+                Conversation Memory
+                          │
+                          ▼
+                Question Processing
+                          │
+                          ▼
+                Relevance Checking
+                          │
+                          ▼
+                 Multi-Query LLM
+                          │
+              ┌───────────┴───────────┐
+              │                       │
+              ▼                       ▼
+        Semantic Search          Keyword Search
+            FAISS                    BM25
+              │                       │
+              └───────────┬───────────┘
+                          ▼
+                 Candidate Documents
+                          │
+                          ▼
+                 Cross-Encoder
+                   Reranking
+                          │
+                          ▼
+                   Top Documents
+                          │
+                          ▼
+                    Gemini LLM
+                          │
+                          ▼
+                    Final Answer
+                          │
+                          ▼
+                Conversation Memory
 ```
 
 ---
 
-### Follow-Up Question
+# What This Advanced RAG Adds
 
-```text
-Question:
-What about children?
-```
+Compared with a basic RAG implementation, this architecture introduces:
 
-The system uses the previous conversation to understand the question.
-
-Output:
-
-```text
-Source: PDF
-```
-
-The answer is generated using the relevant document context.
+* Multi-query generation
+* Multiple retrieval strategies
+* Candidate document aggregation
+* Cross-Encoder reranking
+* Follow-up question handling
+* Conversational memory
+* Document relevance checking
+* Dynamic PDF input
+* Dedicated end-to-end Advanced RAG pipeline
 
 ---
 
-### Unrelated Question
+# Development Approach
 
-```text
-Question:
-What is the capital of France?
-```
-
-The relevance check identifies that the question is not related to the uploaded PDF.
-
-Output:
-
-```text
-Source: General Knowledge
-```
-
-Gemini then generates the general answer.
-
----
-
-## 📊 Current Project Stage
-
-The project has evolved through multiple stages:
+The RAG system was developed incrementally.
 
 ```text
 Basic RAG
    ↓
-FAISS Vector Search
+Hybrid Retrieval
    ↓
-LangChain Integration
+Parent-Child Retrieval
    ↓
-LangGraph Concepts
+LangGraph Integration
    ↓
-Conversation Memory
+Reranking
    ↓
-Follow-Up Question Handling
+Multi-Query Retrieval
    ↓
-Relevance Detection
+Advanced Reranking
    ↓
-General Knowledge Fallback
-   ↓
-BM25 Keyword Retrieval
-   ↓
-Hybrid RAG
+Advanced RAG Pipeline
 ```
 
-The current implementation focuses on combining semantic retrieval and keyword retrieval while maintaining conversational context.
+Each architecture was tested independently before being integrated into the larger RAG project.
 
 ---
 
-## 🚀 Future Improvements
+# Future Work
 
-Possible future improvements include:
+The main project is planned to continue with additional RAG architectures, including:
 
-- Score normalization between FAISS and BM25
-- More advanced result fusion
-- Reranking retrieved documents
-- Better query rewriting
-- Long-term memory
-- LangGraph-based workflow orchestration
-- MCP tool integration
-- Streaming responses
-- Multiple document support
-- Document management interface
-- Web-based user interface
-- Evaluation metrics for retrieval quality
-- Automated RAG evaluation
-- Better citation and source tracking
+```text
+Advanced RAG
+     ↓
+CRAG
+     ↓
+Additional RAG Architectures
+```
+
+The current branch focuses specifically on the **Advanced RAG implementation**.
 
 ---
 
-## 👩‍💻 Author
+# Author
 
 **Thadikamalla Sai Madhu Samyuktha**
 
-GitHub:
+GitHub: [Samyu1904](https://github.com/Samyu1904)
 
-https://github.com/Samyu1904
+---
+
+## License
+
+This project is intended for educational and portfolio purposes.
