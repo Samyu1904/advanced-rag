@@ -8,22 +8,26 @@ from vectorstore.faiss_store import FAISSVectorStore
 from retrieval.retriever import RAGRetriever
 from retrieval.bm25_retriever import BM25Retriever
 
-from self_rag.self_rag_pipeline import SelfRAGPipeline
+from agentic_rag.agentic_rag_pipeline import (
+    AgenticRAGPipeline
+)
 
 
-class SelfRAGApplication:
+class AgenticRAGApplication:
 
     def __init__(self):
 
         print("\n========================================")
-        print("             SELF-RAG SYSTEM")
+        print("          AGENTIC RAG SYSTEM")
         print("========================================")
 
         self.pdf_path = input(
             "\nEnter the full path of your PDF: "
         ).strip()
 
-        pdf_file = Path(self.pdf_path)
+        pdf_file = Path(
+            self.pdf_path
+        )
 
         if not pdf_file.exists():
 
@@ -41,15 +45,29 @@ class SelfRAGApplication:
 
             raise SystemExit
 
-        self.documents = self.load_pdf()
+        self.documents = (
+            self.load_pdf()
+        )
 
-        self.chunks = self.split_documents()
+        self.chunks = (
+            self.split_documents()
+        )
 
-        self.faiss_retriever = self.create_faiss_retriever()
+        self.faiss_retriever = (
+            self.create_faiss_retriever()
+        )
 
-        self.bm25_retriever = self.create_bm25_retriever()
+        self.bm25_retriever = (
+            self.create_bm25_retriever()
+        )
 
-        self.pipeline = self.create_self_rag_pipeline()
+        self.pipeline = (
+            self.create_agentic_rag_pipeline()
+        )
+
+    # ============================================================
+    # LOAD PDF
+    # ============================================================
 
     def load_pdf(self):
 
@@ -63,6 +81,10 @@ class SelfRAGApplication:
 
         return documents
 
+    # ============================================================
+    # SPLIT DOCUMENT
+    # ============================================================
+
     def split_documents(self):
 
         print("\nSplitting document...")
@@ -72,20 +94,32 @@ class SelfRAGApplication:
             chunk_overlap=200
         )
 
-        chunks = splitter.split_documents(
-            self.documents
+        chunks = (
+            splitter.split_documents(
+                self.documents
+            )
         )
 
         return chunks
 
+    # ============================================================
+    # CREATE FAISS
+    # ============================================================
+
     def create_faiss_retriever(self):
 
-        print("\nCreating FAISS vector store...")
+        print(
+            "\nCreating FAISS vector store..."
+        )
 
-        faiss_store = FAISSVectorStore()
+        faiss_store = (
+            FAISSVectorStore()
+        )
 
-        vector_store = faiss_store.create(
-            self.chunks
+        vector_store = (
+            faiss_store.create(
+                self.chunks
+            )
         )
 
         retriever = RAGRetriever(
@@ -96,9 +130,15 @@ class SelfRAGApplication:
 
         return retriever
 
+    # ============================================================
+    # CREATE BM25
+    # ============================================================
+
     def create_bm25_retriever(self):
 
-        print("\nCreating BM25 retriever...")
+        print(
+            "\nCreating BM25 retriever..."
+        )
 
         retriever = BM25Retriever(
             documents=self.chunks
@@ -106,28 +146,49 @@ class SelfRAGApplication:
 
         return retriever
 
-    def create_self_rag_pipeline(self):
+    # ============================================================
+    # CREATE AGENTIC RAG
+    # ============================================================
 
-        print("\nCreating Self-RAG pipeline...")
+    def create_agentic_rag_pipeline(self):
 
-        pipeline = SelfRAGPipeline(
+        print(
+            "\nCreating Agentic RAG pipeline..."
+        )
+
+        pipeline = AgenticRAGPipeline(
             faiss_retriever=self.faiss_retriever,
             bm25_retriever=self.bm25_retriever,
-            top_k=3
+            top_k=3,
+            max_iterations=3
         )
 
         return pipeline
 
+    # ============================================================
+    # RUN APPLICATION
+    # ============================================================
+
     def run(self):
 
-        print("\n" + "=" * 70)
-        print("SELF-RAG READY")
+        print("\n")
+        print("=" * 70)
+        print("AGENTIC RAG READY")
         print("=" * 70)
 
         print("\nCommands:")
-        print("  history -> show conversation history")
-        print("  clear   -> clear conversation memory")
-        print("  exit    -> exit Self-RAG")
+
+        print(
+            "  history -> show conversation history"
+        )
+
+        print(
+            "  clear   -> clear conversation memory"
+        )
+
+        print(
+            "  exit    -> exit Agentic RAG"
+        )
 
         while True:
 
@@ -146,7 +207,7 @@ class SelfRAGApplication:
             if question.lower() == "exit":
 
                 print(
-                    "\nExiting Self-RAG..."
+                    "\nExiting Agentic RAG..."
                 )
 
                 break
@@ -185,6 +246,8 @@ class SelfRAGApplication:
 
 if __name__ == "__main__":
 
-    application = SelfRAGApplication()
+    application = (
+        AgenticRAGApplication()
+    )
 
     application.run()
