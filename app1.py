@@ -3,251 +3,138 @@ from pathlib import Path
 from ingestion.pdf_loader import PDFLoader
 from ingestion.text_splitter import TextSplitter
 
-from vectorstore.faiss_store import FAISSVectorStore
-
-from retrieval.retriever import RAGRetriever
-from retrieval.bm25_retriever import BM25Retriever
-
-from agentic_rag.agentic_rag_pipeline import (
-    AgenticRAGPipeline
-)
+from graph_rag.graph_builder import GraphBuilder
+from graph_rag.graph_pipeline import GraphRAGPipeline
 
 
-class AgenticRAGApplication:
+def load_and_build_graph():
 
-    def __init__(self):
+    print("\n")
+    print("=" * 70)
+    print("GRAPH RAG INITIALIZATION")
+    print("=" * 70)
 
-        print("\n========================================")
-        print("          AGENTIC RAG SYSTEM")
-        print("========================================")
+    pdf_path = input(
+        "\nEnter PDF path: "
+    ).strip()
 
-        self.pdf_path = input(
-            "\nEnter the full path of your PDF: "
-        ).strip()
+    pdf_path = Path(pdf_path)
 
-        pdf_file = Path(
-            self.pdf_path
-        )
-
-        if not pdf_file.exists():
-
-            print(
-                "\nPDF file not found."
-            )
-
-            raise SystemExit
-
-        if pdf_file.suffix.lower() != ".pdf":
-
-            print(
-                "\nPlease provide a PDF file."
-            )
-
-            raise SystemExit
-
-        self.documents = (
-            self.load_pdf()
-        )
-
-        self.chunks = (
-            self.split_documents()
-        )
-
-        self.faiss_retriever = (
-            self.create_faiss_retriever()
-        )
-
-        self.bm25_retriever = (
-            self.create_bm25_retriever()
-        )
-
-        self.pipeline = (
-            self.create_agentic_rag_pipeline()
-        )
-
-    # ============================================================
-    # LOAD PDF
-    # ============================================================
-
-    def load_pdf(self):
-
-        print("\nLoading PDF...")
-
-        loader = PDFLoader()
-
-        documents = loader.load_pdf(
-            self.pdf_path
-        )
-
-        return documents
-
-    # ============================================================
-    # SPLIT DOCUMENT
-    # ============================================================
-
-    def split_documents(self):
-
-        print("\nSplitting document...")
-
-        splitter = TextSplitter(
-            chunk_size=1000,
-            chunk_overlap=200
-        )
-
-        chunks = (
-            splitter.split_documents(
-                self.documents
-            )
-        )
-
-        return chunks
-
-    # ============================================================
-    # CREATE FAISS
-    # ============================================================
-
-    def create_faiss_retriever(self):
+    if not pdf_path.exists():
 
         print(
-            "\nCreating FAISS vector store..."
+            "\nPDF file not found."
         )
 
-        faiss_store = (
-            FAISSVectorStore()
-        )
+        return None
 
-        vector_store = (
-            faiss_store.create(
-                self.chunks
-            )
-        )
-
-        retriever = RAGRetriever(
-            vector_store=vector_store,
-            top_k=3,
-            threshold=1.2
-        )
-
-        return retriever
-
-    # ============================================================
-    # CREATE BM25
-    # ============================================================
-
-    def create_bm25_retriever(self):
+    if pdf_path.suffix.lower() != ".pdf":
 
         print(
-            "\nCreating BM25 retriever..."
+            "\nPlease provide a PDF file."
         )
 
-        retriever = BM25Retriever(
-            documents=self.chunks
-        )
+        return None
 
-        return retriever
+    print("\nLoading PDF...")
 
-    # ============================================================
-    # CREATE AGENTIC RAG
-    # ============================================================
+    loader = PDFLoader()
 
-    def create_agentic_rag_pipeline(self):
+    documents = loader.load_pdf(
+        str(pdf_path)
+    )
 
-        print(
-            "\nCreating Agentic RAG pipeline..."
-        )
+    print("\nSplitting PDF text...")
 
-        pipeline = AgenticRAGPipeline(
-            faiss_retriever=self.faiss_retriever,
-            bm25_retriever=self.bm25_retriever,
-            top_k=3,
-            max_iterations=3
-        )
+    splitter = TextSplitter(
+        chunk_size=1000,
+        chunk_overlap=200
+    )
 
-        return pipeline
+    chunks = splitter.split_documents(
+        documents
+    )
 
-    # ============================================================
-    # RUN APPLICATION
-    # ============================================================
+    print(
+        f"\nChunks available for graph construction: "
+        f"{len(chunks)}"
+    )
 
-    def run(self):
+    builder = GraphBuilder(
+        batch_size=3
+    )
+
+    graph = builder.build_graph(
+        chunks
+    )
+
+    builder.print_graph()
+
+    pipeline = GraphRAGPipeline(
+        graph=graph,
+        top_k=10
+    )
+
+    return pipeline
+
+
+def main():
+
+    pipeline = load_and_build_graph()
+
+    if pipeline is None:
+        return
+
+    print("\n")
+    print("=" * 70)
+    print("GRAPH RAG READY")
+    print("=" * 70)
+
+    print("\nCommands:")
+    print("history  -> show conversation history")
+    print("clear    -> clear conversation memory")
+    print("exit     -> exit Graph RAG")
+
+    while True:
 
         print("\n")
-        print("=" * 70)
-        print("AGENTIC RAG READY")
-        print("=" * 70)
 
-        print("\nCommands:")
+        question = input(
+            "Ask your question: "
+        ).strip()
 
-        print(
-            "  history -> show conversation history"
-        )
+        if not question:
 
-        print(
-            "  clear   -> clear conversation memory"
-        )
+            print(
+                "\nPlease enter a question."
+            )
 
-        print(
-            "  exit    -> exit Agentic RAG"
-        )
+            continue
 
-        while True:
+        command = question.lower()
 
-            question = input(
-                "\nQuestion: "
-            ).strip()
+        if command == "exit":
 
-            if not question:
+            print(
+                "\nExiting Graph RAG..."
+            )
 
-                print(
-                    "Please enter a question."
-                )
+            break
 
-                continue
+        if command == "history":
 
-            if question.lower() == "exit":
+            pipeline.show_history()
 
-                print(
-                    "\nExiting Agentic RAG..."
-                )
+            continue
 
-                break
+        if command == "clear":
 
-            if question.lower() == "history":
+            pipeline.clear_memory()
 
-                self.pipeline.show_history()
+            continue
 
-                continue
-
-            if question.lower() == "clear":
-
-                self.pipeline.clear_memory()
-
-                continue
-
-            try:
-
-                self.pipeline.ask(
-                    question
-                )
-
-            except Exception as error:
-
-                print("\n")
-                print("=" * 70)
-                print("ERROR")
-                print("=" * 70)
-
-                print(error)
-
-                print(
-                    "\nPlease check the error above."
-                )
+        pipeline.ask(question)
 
 
 if __name__ == "__main__":
-
-    application = (
-        AgenticRAGApplication()
-    )
-
-    application.run()
+    main()
