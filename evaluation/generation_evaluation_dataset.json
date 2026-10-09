@@ -1,0 +1,22 @@
+[
+  {
+    "question": "What are the health effects of air pollution?",
+    "expected_answer": "Air pollution can cause or worsen respiratory diseases, cardiovascular diseases, lung cancer, and other health problems."
+  },
+  {
+    "question": "What are the causes of air pollution?",
+    "expected_answer": "Air pollution is caused by sources such as vehicles, industries, power plants, burning of fossil fuels, and other human activities."
+  },
+  {
+    "question": "What measures can reduce exposure to air pollution?",
+    "expected_answer": "Exposure can be reduced by avoiding polluted areas, reducing outdoor activity during periods of high pollution, using protective measures, and reducing emissions."
+  },
+  {
+    "question": "What is particulate matter?",
+    "expected_answer": "Particulate matter is a mixture of very small solid particles and liquid droplets suspended in the air."
+  },
+  {
+    "question": "How does air pollution affect children?",
+    "expected_answer": "Air pollution can affect children's respiratory health, impair lung development, and increase the risk of respiratory illnesses."
+  }
+]

@@ -1,0 +1,349 @@
+{
+    "gemini_used": true,
+    "evaluation_questions": 5,
+    "results": {
+        "Basic RAG": {
+            "results": [
+                {
+                    "rag": "Basic RAG",
+                    "question": "What are the health effects of air pollution?",
+                    "answer": "Based on the provided document, the health effects of air pollution include:\n\n* **Deaths from Air Pollution-Related Diseases:** Air pollution causes about seven million deaths annually worldwide (one in eight deaths). \n* **Top Noncommunicable Diseases:** It is one of the largest causes of four major noncommunicable diseases: stroke, lung cancer, chronic respiratory disease, and heart disease (accounting for a quarter to over one-third of these deaths).\n* **Childhood Pneumonia:** It is responsible for more than 50% of childhood pneumonia deaths.\n* **Respiratory and Cardiovascular Impacts:** Fine particulate matter (PM) is a carcinogen that penetrates through the lungs into the bloodstream, causing both respiratory and cardiovascular impacts.\n* **Ambient and Household Mortality:** Outdoor (ambient) air pollution caused 4.2 million deaths (2016), and household air pollution causes about 3.8 million deaths annually (2016).",
+                    "retrieved_documents": 3,
+                    "faithfulness": 1.0,
+                    "answer_relevance": 0.75,
+                    "answer_correctness": 0.194,
+                    "retrieval_latency_seconds": 0.021,
+                    "generation_latency_seconds": 5.714,
+                    "total_latency_seconds": 5.735
+                },
+                {
+                    "rag": "Basic RAG",
+                    "question": "What are the causes of air pollution?",
+                    "answer": "Based on the provided context, the causes of air pollution include:\n\n* **Ambient (outdoor) air pollution:** Mainly caused by transport, waste burning, agriculture, building energy use, industry, power production, and forest fires.\n* **Household air pollution:** Mainly caused by smoke from inefficient cookstove technologies and fuels, such as biomass, coal, kerosene, charcoal, dung, or agricultural residues.",
+                    "retrieved_documents": 3,
+                    "faithfulness": 1.0,
+                    "answer_relevance": 0.714,
+                    "answer_correctness": 0.338,
+                    "retrieval_latency_seconds": 0.011,
+                    "generation_latency_seconds": 6.518,
+                    "total_latency_seconds": 6.529
+                },
+                {
+                    "rag": "Basic RAG",
+                    "question": "What measures can reduce exposure to air pollution?",
+                    "answer": "I could not find the answer in the provided document.",
+                    "retrieved_documents": 3,
+                    "faithfulness": 0.0,
+                    "answer_relevance": 0.0,
+                    "answer_correctness": 0.0,
+                    "retrieval_latency_seconds": 0.012,
+                    "generation_latency_seconds": 39.252,
+                    "total_latency_seconds": 39.264
+                },
+                {
+                    "rag": "Basic RAG",
+                    "question": "What is particulate matter?",
+                    "answer": "Based on the provided document, fine particulate matter (PM) is one of the most health-damaging air pollutants and is classified as a carcinogen. It penetrates through the lungs into the bloodstream, causing both respiratory and cardiovascular impacts. The text also notes that black carbon is a component of PM.",
+                    "retrieved_documents": 3,
+                    "faithfulness": 1.0,
+                    "answer_relevance": 0.75,
+                    "answer_correctness": 0.281,
+                    "retrieval_latency_seconds": 0.012,
+                    "generation_latency_seconds": 17.851,
+                    "total_latency_seconds": 17.862
+                },
+                {
+                    "rag": "Basic RAG",
+                    "question": "How does air pollution affect children?",
+                    "answer": "Based on the provided document, air pollution affects children by being responsible for more than 50% of childhood pneumonia deaths.",
+                    "retrieved_documents": 3,
+                    "faithfulness": 1.0,
+                    "answer_relevance": 0.5,
+                    "answer_correctness": 0.27,
+                    "retrieval_latency_seconds": 0.009,
+                    "generation_latency_seconds": 4.175,
+                    "total_latency_seconds": 4.183
+                }
+            ],
+            "overall": {
+                "faithfulness": 0.8,
+                "answer_relevance": 0.543,
+                "answer_correctness": 0.217,
+                "average_latency_seconds": 14.715
+            }
+        },
+        "Hybrid RAG": {
+            "results": [
+                {
+                    "rag": "Hybrid RAG",
+                    "question": "What are the health effects of air pollution?",
+                    "answer": "Based on the provided document, the health effects of air pollution include:\n\n* **Respiratory and Cardiovascular Impacts:** Fine particulate matter (PM) penetrates through the lungs into the bloodstream, causing both respiratory and cardiovascular impacts.\n* **Top Noncommunicable Diseases:** It is one of the largest causes of stroke, lung cancer, chronic respiratory disease, and heart disease (accounting for between a quarter to over one-third of these deaths).\n* **Childhood Pneumonia:** It is responsible for more than 50% of childhood pneumonia deaths.\n* **Carcinogenic Effects:** Fine PM is classified as a carcinogen.\n* **Death/Mortality:** It causes about 7 million deaths annually worldwide (about one in eight deaths), including 4.2 million deaths from ambient (outdoor) air pollution and 3.8 million deaths from household air pollution.",
+                    "retrieved_documents": 3,
+                    "faithfulness": 1.0,
+                    "answer_relevance": 0.75,
+                    "answer_correctness": 0.194,
+                    "retrieval_latency_seconds": 0.013,
+                    "generation_latency_seconds": 5.792,
+                    "total_latency_seconds": 5.806
+                },
+                {
+                    "rag": "Hybrid RAG",
+                    "question": "What are the causes of air pollution?",
+                    "answer": "Based on the provided document, the causes of air pollution include:\n\n* **Ambient (outdoor) air pollution:** Mainly caused by transport, waste burning, agriculture, building energy use, industry, power production, and forest fires.\n* **Household air pollution:** Mainly caused by smoke from inefficient cookstove technologies and fuels, such as biomass, coal, kerosene, charcoal, dung, or agricultural residues.",
+                    "retrieved_documents": 3,
+                    "faithfulness": 1.0,
+                    "answer_relevance": 0.714,
+                    "answer_correctness": 0.338,
+                    "retrieval_latency_seconds": 0.01,
+                    "generation_latency_seconds": 27.407,
+                    "total_latency_seconds": 27.416
+                },
+                {
+                    "rag": "Hybrid RAG",
+                    "question": "What measures can reduce exposure to air pollution?",
+                    "answer": "Based on the provided document, measures and strategies that can improve air quality and reduce pollution include:\n\n* **Promoting sustainable transport**\n* **Promoting clean energy** and using **clean fuels and technologies** for household fuel combustion\n* **Waste management**\n* **Urban planning** \n* Implementing **control measures for biological indoor air pollutants** (such as mould) and setting limits for chemical indoor pollutants from building materials and furnishings\n* Shaping strategies across **energy, transport, waste, and other urban sectors**",
+                    "retrieved_documents": 3,
+                    "faithfulness": 1.0,
+                    "answer_relevance": 0.625,
+                    "answer_correctness": 0.139,
+                    "retrieval_latency_seconds": 0.011,
+                    "generation_latency_seconds": 10.027,
+                    "total_latency_seconds": 10.038
+                },
+                {
+                    "rag": "Hybrid RAG",
+                    "question": "What is particulate matter?",
+                    "answer": "I could not find the answer in the provided document.",
+                    "retrieved_documents": 0,
+                    "faithfulness": 0.0,
+                    "answer_relevance": 0.0,
+                    "answer_correctness": 0.154,
+                    "retrieval_latency_seconds": 0.009,
+                    "generation_latency_seconds": 4.08,
+                    "total_latency_seconds": 4.089
+                },
+                {
+                    "rag": "Hybrid RAG",
+                    "question": "How does air pollution affect children?",
+                    "answer": "Based on the provided document, air pollution is responsible for more than 50% of childhood pneumonia deaths.",
+                    "retrieved_documents": 3,
+                    "faithfulness": 1.0,
+                    "answer_relevance": 0.333,
+                    "answer_correctness": 0.235,
+                    "retrieval_latency_seconds": 0.013,
+                    "generation_latency_seconds": 3.502,
+                    "total_latency_seconds": 3.515
+                }
+            ],
+            "overall": {
+                "faithfulness": 0.8,
+                "answer_relevance": 0.484,
+                "answer_correctness": 0.212,
+                "average_latency_seconds": 10.173
+            }
+        },
+        "Reranking RAG": {
+            "results": [
+                {
+                    "rag": "Reranking RAG",
+                    "question": "What are the health effects of air pollution?",
+                    "answer": "Based on the provided document, the health effects of air pollution include:\n\n* **Noncommunicable diseases:** It is a major cause of stroke, lung cancer, chronic respiratory disease, and heart disease (accounting for between a quarter and over one-third of these deaths).\n* **Childhood pneumonia:** Responsible for more than 50% of childhood pneumonia deaths.\n* **Respiratory and cardiovascular impacts:** Fine particulate matter (PM), which is classified as a carcinogen, penetrates through the lungs into the bloodstream, causing respiratory and cardiovascular harm.\n* **Mortality:** It causes about 7 million deaths worldwide annually (including 4.2 million deaths from ambient/outdoor air pollution and approximately 3.8 million deaths from household air pollution based on 2016 data).",
+                    "retrieved_documents": 3,
+                    "faithfulness": 1.0,
+                    "answer_relevance": 0.75,
+                    "answer_correctness": 0.217,
+                    "retrieval_latency_seconds": 0.432,
+                    "generation_latency_seconds": 4.082,
+                    "total_latency_seconds": 4.514
+                },
+                {
+                    "rag": "Reranking RAG",
+                    "question": "What are the causes of air pollution?",
+                    "answer": "Based on the provided document, air pollution is caused by:\n\n* **Ambient (outdoor) sources:** Transport, waste burning, agriculture, building energy use, industry, power production, and forest fires.\n* **Household (indoor) sources:** Smoke from inefficient cookstove technologies and fuels, such as biomass, coal, kerosene, charcoal, dung, or agricultural residues.",
+                    "retrieved_documents": 3,
+                    "faithfulness": 1.0,
+                    "answer_relevance": 0.429,
+                    "answer_correctness": 0.375,
+                    "retrieval_latency_seconds": 0.438,
+                    "generation_latency_seconds": 9.453,
+                    "total_latency_seconds": 9.891
+                },
+                {
+                    "rag": "Reranking RAG",
+                    "question": "What measures can reduce exposure to air pollution?",
+                    "error": "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
+                },
+                {
+                    "rag": "Reranking RAG",
+                    "question": "What is particulate matter?",
+                    "answer": "I could not find the answer in the provided document.",
+                    "retrieved_documents": 0,
+                    "faithfulness": 0.0,
+                    "answer_relevance": 0.0,
+                    "answer_correctness": 0.154,
+                    "retrieval_latency_seconds": 0.011,
+                    "generation_latency_seconds": 3.191,
+                    "total_latency_seconds": 3.201
+                },
+                {
+                    "rag": "Reranking RAG",
+                    "question": "How does air pollution affect children?",
+                    "error": "Error calling model 'gemini-3.6-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 16h43m55.751334304s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '60235s'}]}}"
+                }
+            ],
+            "overall": {
+                "faithfulness": 0.667,
+                "answer_relevance": 0.393,
+                "answer_correctness": 0.249,
+                "average_latency_seconds": 5.869
+            }
+        },
+        "Advanced RAG": {
+            "results": [
+                {
+                    "rag": "Advanced RAG",
+                    "question": "What are the health effects of air pollution?",
+                    "error": "Error calling model 'gemini-3.6-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 16h43m17.255804608s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '60197s'}]}}"
+                },
+                {
+                    "rag": "Advanced RAG",
+                    "question": "What are the causes of air pollution?",
+                    "error": "Error calling model 'gemini-3.6-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 16h42m39.004502964s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '60159s'}]}}"
+                },
+                {
+                    "rag": "Advanced RAG",
+                    "question": "What measures can reduce exposure to air pollution?",
+                    "error": "Error calling model 'gemini-3.6-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 16h41m59.221967881s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '60119s'}]}}"
+                },
+                {
+                    "rag": "Advanced RAG",
+                    "question": "What is particulate matter?",
+                    "error": "Error calling model 'gemini-3.6-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 16h41m21.588166053s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '60081s'}]}}"
+                },
+                {
+                    "rag": "Advanced RAG",
+                    "question": "How does air pollution affect children?",
+                    "error": "Error calling model 'gemini-3.6-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 16h40m40.25601962s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '60040s'}]}}"
+                }
+            ],
+            "overall": {
+                "faithfulness": 0.0,
+                "answer_relevance": 0.0,
+                "answer_correctness": 0.0,
+                "average_latency_seconds": 0.0
+            }
+        },
+        "CRAG": {
+            "results": [
+                {
+                    "rag": "CRAG",
+                    "question": "What are the health effects of air pollution?",
+                    "error": "Error calling model 'gemini-3.6-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 16h39m56.786150289s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '59996s'}]}}"
+                },
+                {
+                    "rag": "CRAG",
+                    "question": "What are the causes of air pollution?",
+                    "error": "Error calling model 'gemini-3.6-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 16h39m15.653352289s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '59955s'}]}}"
+                },
+                {
+                    "rag": "CRAG",
+                    "question": "What measures can reduce exposure to air pollution?",
+                    "error": "Error calling model 'gemini-3.6-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 16h38m38.183076907s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '59918s'}]}}"
+                },
+                {
+                    "rag": "CRAG",
+                    "question": "What is particulate matter?",
+                    "error": "Error calling model 'gemini-3.6-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 16h37m58.260010945s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '59878s'}]}}"
+                },
+                {
+                    "rag": "CRAG",
+                    "question": "How does air pollution affect children?",
+                    "error": "Error calling model 'gemini-3.6-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 16h37m17.204875507s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '59837s'}]}}"
+                }
+            ],
+            "overall": {
+                "faithfulness": 0.0,
+                "answer_relevance": 0.0,
+                "answer_correctness": 0.0,
+                "average_latency_seconds": 0.0
+            }
+        },
+        "Self-RAG": {
+            "results": [
+                {
+                    "rag": "Self-RAG",
+                    "question": "What are the health effects of air pollution?",
+                    "error": "Error calling model 'gemini-3.6-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 16h36m38.190410225s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '59798s'}]}}"
+                },
+                {
+                    "rag": "Self-RAG",
+                    "question": "What are the causes of air pollution?",
+                    "answer": "Based on the provided context, the main causes and sources of air pollution include:\n\n* **Ambient (outdoor) air pollution:** Mainly caused by transport, waste burning, agriculture, building energy use, industry, power production, and forest fires.\n* **Household air pollution:** Mainly caused by smoke from inefficient cookstove technologies and fuels, such as biomass, coal, kerosene, charcoal, dung, or agricultural residues.",
+                    "retrieved_documents": 3,
+                    "faithfulness": 1.0,
+                    "answer_relevance": 0.714,
+                    "answer_correctness": 0.358,
+                    "retrieval_latency_seconds": 0.019,
+                    "generation_latency_seconds": 8.937,
+                    "total_latency_seconds": 8.956
+                },
+                {
+                    "rag": "Self-RAG",
+                    "question": "What measures can reduce exposure to air pollution?",
+                    "error": "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
+                },
+                {
+                    "rag": "Self-RAG",
+                    "question": "What is particulate matter?",
+                    "error": "Error calling model 'gemini-3.6-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 16h35m9.553492217s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '59709s'}]}}"
+                },
+                {
+                    "rag": "Self-RAG",
+                    "question": "How does air pollution affect children?",
+                    "error": "Error calling model 'gemini-3.6-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 16h34m30.256991674s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '59670s'}]}}"
+                }
+            ],
+            "overall": {
+                "faithfulness": 1.0,
+                "answer_relevance": 0.714,
+                "answer_correctness": 0.358,
+                "average_latency_seconds": 8.956
+            }
+        },
+        "Parent-Child RAG": {
+            "results": [
+                {
+                    "rag": "Parent-Child RAG",
+                    "question": "What are the health effects of air pollution?",
+                    "error": "Error calling model 'gemini-3.6-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 16h33m53.084938345s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '59633s'}]}}"
+                },
+                {
+                    "rag": "Parent-Child RAG",
+                    "question": "What are the causes of air pollution?",
+                    "error": "Error calling model 'gemini-3.6-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 16h33m12.909953493s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '59592s'}]}}"
+                },
+                {
+                    "rag": "Parent-Child RAG",
+                    "question": "What measures can reduce exposure to air pollution?",
+                    "error": "Error calling model 'gemini-3.6-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 16h32m34.94316022s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '59554s'}]}}"
+                },
+                {
+                    "rag": "Parent-Child RAG",
+                    "question": "What is particulate matter?",
+                    "error": "Error calling model 'gemini-3.6-flash' (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 16h31m56.143593803s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '59516s'}]}}"
+                },
+                {
+                    "rag": "Parent-Child RAG",
+                    "question": "How does air pollution affect children?",
+                    "error": "Server disconnected without sending a response."
+                }
+            ],
+            "overall": {
+                "faithfulness": 0.0,
+                "answer_relevance": 0.0,
+                "answer_correctness": 0.0,
+                "average_latency_seconds": 0.0
+            }
+        }
+    }
+}

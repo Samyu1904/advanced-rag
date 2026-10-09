@@ -1,0 +1,88 @@
+{
+    "phase": 3,
+    "gemini_used": false,
+    "parent_child": {
+        "precision_at_3": 0.5,
+        "recall_at_3": 0.6,
+        "mrr": 0.7666666666666667,
+        "questions": [
+            {
+                "question": "What are the health effects of air pollution?",
+                "retrieved_ids": [
+                    "chunk_0",
+                    "chunk_1",
+                    "chunk_9"
+                ],
+                "relevant_ids": [
+                    "chunk_0",
+                    "chunk_1",
+                    "chunk_2"
+                ],
+                "precision_at_3": 0.6666666666666666,
+                "recall_at_3": 0.6666666666666666,
+                "mrr": 1.0
+            },
+            {
+                "question": "What are the causes of air pollution?",
+                "retrieved_ids": [
+                    "chunk_0",
+                    "chunk_1"
+                ],
+                "relevant_ids": [
+                    "chunk_1"
+                ],
+                "precision_at_3": 0.5,
+                "recall_at_3": 1.0,
+                "mrr": 0.5
+            },
+            {
+                "question": "What measures can reduce exposure to air pollution?",
+                "retrieved_ids": [
+                    "chunk_1",
+                    "chunk_5",
+                    "chunk_6"
+                ],
+                "relevant_ids": [
+                    "chunk_4",
+                    "chunk_6",
+                    "chunk_7"
+                ],
+                "precision_at_3": 0.3333333333333333,
+                "recall_at_3": 0.3333333333333333,
+                "mrr": 0.3333333333333333
+            },
+            {
+                "question": "What is particulate matter?",
+                "retrieved_ids": [
+                    "chunk_1",
+                    "chunk_5"
+                ],
+                "relevant_ids": [
+                    "chunk_1",
+                    "chunk_2"
+                ],
+                "precision_at_3": 0.5,
+                "recall_at_3": 0.5,
+                "mrr": 1.0
+            },
+            {
+                "question": "How does air pollution affect children?",
+                "retrieved_ids": [
+                    "chunk_0",
+                    "chunk_1"
+                ],
+                "relevant_ids": [
+                    "chunk_0",
+                    "chunk_2"
+                ],
+                "precision_at_3": 0.5,
+                "recall_at_3": 0.5,
+                "mrr": 1.0
+            }
+        ]
+    },
+    "graph_rag": {
+        "status": "not_evaluated",
+        "reason": "GraphBuilder requires Gemini to construct the knowledge graph. Gemini quota is currently exhausted. No Gemini call was made by this evaluator."
+    }
+}

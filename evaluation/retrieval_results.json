@@ -1,0 +1,249 @@
+{
+  "Basic RAG": {
+    "questions": [
+      {
+        "question": "What are the health effects of air pollution?",
+        "retrieved_ids": [
+          "chunk_1",
+          "chunk_0",
+          "chunk_9"
+        ],
+        "relevant_ids": [
+          "chunk_0",
+          "chunk_1",
+          "chunk_2"
+        ],
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 0.6666666666666666,
+        "reciprocal_rank": 1.0
+      },
+      {
+        "question": "What are the causes of air pollution?",
+        "retrieved_ids": [
+          "chunk_1",
+          "chunk_0",
+          "chunk_9"
+        ],
+        "relevant_ids": [
+          "chunk_1"
+        ],
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "reciprocal_rank": 1.0
+      },
+      {
+        "question": "What measures can reduce exposure to air pollution?",
+        "retrieved_ids": [
+          "chunk_6",
+          "chunk_0",
+          "chunk_9"
+        ],
+        "relevant_ids": [
+          "chunk_4",
+          "chunk_6",
+          "chunk_7"
+        ],
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 0.3333333333333333,
+        "reciprocal_rank": 1.0
+      },
+      {
+        "question": "What is particulate matter?",
+        "retrieved_ids": [
+          "chunk_1",
+          "chunk_2",
+          "chunk_3"
+        ],
+        "relevant_ids": [
+          "chunk_1",
+          "chunk_2"
+        ],
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "reciprocal_rank": 1.0
+      },
+      {
+        "question": "How does air pollution affect children?",
+        "retrieved_ids": [
+          "chunk_1",
+          "chunk_0",
+          "chunk_9"
+        ],
+        "relevant_ids": [
+          "chunk_0",
+          "chunk_2"
+        ],
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 0.5,
+        "reciprocal_rank": 0.5
+      }
+    ],
+    "aggregate": {
+      "precision_at_k": 0.4666666666666666,
+      "recall_at_k": 0.7,
+      "mrr": 0.9
+    }
+  },
+  "Hybrid RAG": {
+    "questions": [
+      {
+        "question": "What are the health effects of air pollution?",
+        "retrieved_ids": [
+          "chunk_1",
+          "chunk_0",
+          "chunk_9"
+        ],
+        "relevant_ids": [
+          "chunk_0",
+          "chunk_1",
+          "chunk_2"
+        ],
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 0.6666666666666666,
+        "reciprocal_rank": 1.0
+      },
+      {
+        "question": "What are the causes of air pollution?",
+        "retrieved_ids": [
+          "chunk_1",
+          "chunk_0",
+          "chunk_9"
+        ],
+        "relevant_ids": [
+          "chunk_1"
+        ],
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "reciprocal_rank": 1.0
+      },
+      {
+        "question": "What measures can reduce exposure to air pollution?",
+        "retrieved_ids": [
+          "chunk_6",
+          "chunk_0",
+          "chunk_9"
+        ],
+        "relevant_ids": [
+          "chunk_4",
+          "chunk_6",
+          "chunk_7"
+        ],
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 0.3333333333333333,
+        "reciprocal_rank": 1.0
+      },
+      {
+        "question": "What is particulate matter?",
+        "retrieved_ids": [],
+        "relevant_ids": [
+          "chunk_1",
+          "chunk_2"
+        ],
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "reciprocal_rank": 0.0
+      },
+      {
+        "question": "How does air pollution affect children?",
+        "retrieved_ids": [
+          "chunk_1",
+          "chunk_0",
+          "chunk_9"
+        ],
+        "relevant_ids": [
+          "chunk_0",
+          "chunk_2"
+        ],
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 0.5,
+        "reciprocal_rank": 0.5
+      }
+    ],
+    "aggregate": {
+      "precision_at_k": 0.3333333333333333,
+      "recall_at_k": 0.5,
+      "mrr": 0.7
+    }
+  },
+  "Reranking RAG": {
+    "questions": [
+      {
+        "question": "What are the health effects of air pollution?",
+        "retrieved_ids": [
+          "chunk_1",
+          "chunk_0",
+          "chunk_2"
+        ],
+        "relevant_ids": [
+          "chunk_0",
+          "chunk_1",
+          "chunk_2"
+        ],
+        "precision_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "reciprocal_rank": 1.0
+      },
+      {
+        "question": "What are the causes of air pollution?",
+        "retrieved_ids": [
+          "chunk_1",
+          "chunk_0",
+          "chunk_2"
+        ],
+        "relevant_ids": [
+          "chunk_1"
+        ],
+        "precision_at_k": 0.3333333333333333,
+        "recall_at_k": 1.0,
+        "reciprocal_rank": 1.0
+      },
+      {
+        "question": "What measures can reduce exposure to air pollution?",
+        "retrieved_ids": [
+          "chunk_6",
+          "chunk_4",
+          "chunk_7"
+        ],
+        "relevant_ids": [
+          "chunk_4",
+          "chunk_6",
+          "chunk_7"
+        ],
+        "precision_at_k": 1.0,
+        "recall_at_k": 1.0,
+        "reciprocal_rank": 1.0
+      },
+      {
+        "question": "What is particulate matter?",
+        "retrieved_ids": [],
+        "relevant_ids": [
+          "chunk_1",
+          "chunk_2"
+        ],
+        "precision_at_k": 0.0,
+        "recall_at_k": 0.0,
+        "reciprocal_rank": 0.0
+      },
+      {
+        "question": "How does air pollution affect children?",
+        "retrieved_ids": [
+          "chunk_2",
+          "chunk_1",
+          "chunk_0"
+        ],
+        "relevant_ids": [
+          "chunk_0",
+          "chunk_2"
+        ],
+        "precision_at_k": 0.6666666666666666,
+        "recall_at_k": 1.0,
+        "reciprocal_rank": 1.0
+      }
+    ],
+    "aggregate": {
+      "precision_at_k": 0.6,
+      "recall_at_k": 0.8,
+      "mrr": 0.8
+    }
+  }
+}

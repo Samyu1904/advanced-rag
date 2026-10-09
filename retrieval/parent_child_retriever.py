@@ -48,11 +48,12 @@ class ParentChildRetriever:
                 "parent_id"
             )
 
-            if (
-                parent_id
-                and parent_id not in parent_ids
-            ):
-                parent_ids.append(parent_id)
+            if parent_id is not None:
+
+                parent_id = f"parent_{parent_id}"
+
+                if parent_id not in parent_ids:
+                    parent_ids.append(parent_id)
 
         # 4. Retrieve complete parent documents
         parents = self.parent_store.get_parents(

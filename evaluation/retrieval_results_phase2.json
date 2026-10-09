@@ -1,0 +1,263 @@
+{
+    "evaluation": "Phase 2 Retrieval Evaluation",
+    "metrics": [
+        "Precision@3",
+        "Recall@3",
+        "MRR"
+    ],
+    "gemini_used": false,
+    "results": [
+        {
+            "rag": "Advanced RAG",
+            "precision_at_3": 0.667,
+            "recall_at_3": 0.9,
+            "mrr": 0.9,
+            "questions": [
+                {
+                    "question": "What are the health effects of air pollution?",
+                    "retrieved_chunk_ids": [
+                        "chunk_1",
+                        "chunk_0",
+                        "chunk_2"
+                    ],
+                    "relevant_chunk_ids": [
+                        "chunk_0",
+                        "chunk_1",
+                        "chunk_2"
+                    ],
+                    "precision_at_3": 1.0,
+                    "recall_at_3": 1.0,
+                    "mrr": 1.0
+                },
+                {
+                    "question": "What are the causes of air pollution?",
+                    "retrieved_chunk_ids": [
+                        "chunk_1",
+                        "chunk_0",
+                        "chunk_2"
+                    ],
+                    "relevant_chunk_ids": [
+                        "chunk_1"
+                    ],
+                    "precision_at_3": 0.3333333333333333,
+                    "recall_at_3": 1.0,
+                    "mrr": 1.0
+                },
+                {
+                    "question": "What measures can reduce exposure to air pollution?",
+                    "retrieved_chunk_ids": [
+                        "chunk_6",
+                        "chunk_4",
+                        "chunk_7"
+                    ],
+                    "relevant_chunk_ids": [
+                        "chunk_4",
+                        "chunk_6",
+                        "chunk_7"
+                    ],
+                    "precision_at_3": 1.0,
+                    "recall_at_3": 1.0,
+                    "mrr": 1.0
+                },
+                {
+                    "question": "What is particulate matter?",
+                    "retrieved_chunk_ids": [
+                        "chunk_1",
+                        "chunk_0",
+                        "chunk_2"
+                    ],
+                    "relevant_chunk_ids": [
+                        "chunk_1",
+                        "chunk_2"
+                    ],
+                    "precision_at_3": 0.6666666666666666,
+                    "recall_at_3": 1.0,
+                    "mrr": 1.0
+                },
+                {
+                    "question": "How does air pollution affect children?",
+                    "retrieved_chunk_ids": [
+                        "chunk_1",
+                        "chunk_0",
+                        "chunk_9"
+                    ],
+                    "relevant_chunk_ids": [
+                        "chunk_0",
+                        "chunk_2"
+                    ],
+                    "precision_at_3": 0.3333333333333333,
+                    "recall_at_3": 0.5,
+                    "mrr": 0.5
+                }
+            ]
+        },
+        {
+            "rag": "CRAG",
+            "precision_at_3": 0.667,
+            "recall_at_3": 0.9,
+            "mrr": 0.9,
+            "questions": [
+                {
+                    "question": "What are the health effects of air pollution?",
+                    "retrieved_chunk_ids": [
+                        "chunk_1",
+                        "chunk_0",
+                        "chunk_2"
+                    ],
+                    "relevant_chunk_ids": [
+                        "chunk_0",
+                        "chunk_1",
+                        "chunk_2"
+                    ],
+                    "precision_at_3": 1.0,
+                    "recall_at_3": 1.0,
+                    "mrr": 1.0
+                },
+                {
+                    "question": "What are the causes of air pollution?",
+                    "retrieved_chunk_ids": [
+                        "chunk_1",
+                        "chunk_0",
+                        "chunk_2"
+                    ],
+                    "relevant_chunk_ids": [
+                        "chunk_1"
+                    ],
+                    "precision_at_3": 0.3333333333333333,
+                    "recall_at_3": 1.0,
+                    "mrr": 1.0
+                },
+                {
+                    "question": "What measures can reduce exposure to air pollution?",
+                    "retrieved_chunk_ids": [
+                        "chunk_6",
+                        "chunk_4",
+                        "chunk_7"
+                    ],
+                    "relevant_chunk_ids": [
+                        "chunk_4",
+                        "chunk_6",
+                        "chunk_7"
+                    ],
+                    "precision_at_3": 1.0,
+                    "recall_at_3": 1.0,
+                    "mrr": 1.0
+                },
+                {
+                    "question": "What is particulate matter?",
+                    "retrieved_chunk_ids": [
+                        "chunk_1",
+                        "chunk_0",
+                        "chunk_2"
+                    ],
+                    "relevant_chunk_ids": [
+                        "chunk_1",
+                        "chunk_2"
+                    ],
+                    "precision_at_3": 0.6666666666666666,
+                    "recall_at_3": 1.0,
+                    "mrr": 1.0
+                },
+                {
+                    "question": "How does air pollution affect children?",
+                    "retrieved_chunk_ids": [
+                        "chunk_1",
+                        "chunk_0",
+                        "chunk_9"
+                    ],
+                    "relevant_chunk_ids": [
+                        "chunk_0",
+                        "chunk_2"
+                    ],
+                    "precision_at_3": 0.3333333333333333,
+                    "recall_at_3": 0.5,
+                    "mrr": 0.5
+                }
+            ]
+        },
+        {
+            "rag": "Self-RAG",
+            "precision_at_3": 0.467,
+            "recall_at_3": 0.7,
+            "mrr": 0.9,
+            "questions": [
+                {
+                    "question": "What are the health effects of air pollution?",
+                    "retrieved_chunk_ids": [
+                        "chunk_1",
+                        "chunk_0",
+                        "chunk_9"
+                    ],
+                    "relevant_chunk_ids": [
+                        "chunk_0",
+                        "chunk_1",
+                        "chunk_2"
+                    ],
+                    "precision_at_3": 0.6666666666666666,
+                    "recall_at_3": 0.6666666666666666,
+                    "mrr": 1.0
+                },
+                {
+                    "question": "What are the causes of air pollution?",
+                    "retrieved_chunk_ids": [
+                        "chunk_1",
+                        "chunk_0",
+                        "chunk_9"
+                    ],
+                    "relevant_chunk_ids": [
+                        "chunk_1"
+                    ],
+                    "precision_at_3": 0.3333333333333333,
+                    "recall_at_3": 1.0,
+                    "mrr": 1.0
+                },
+                {
+                    "question": "What measures can reduce exposure to air pollution?",
+                    "retrieved_chunk_ids": [
+                        "chunk_6",
+                        "chunk_0",
+                        "chunk_9"
+                    ],
+                    "relevant_chunk_ids": [
+                        "chunk_4",
+                        "chunk_6",
+                        "chunk_7"
+                    ],
+                    "precision_at_3": 0.3333333333333333,
+                    "recall_at_3": 0.3333333333333333,
+                    "mrr": 1.0
+                },
+                {
+                    "question": "What is particulate matter?",
+                    "retrieved_chunk_ids": [
+                        "chunk_1",
+                        "chunk_2",
+                        "chunk_3"
+                    ],
+                    "relevant_chunk_ids": [
+                        "chunk_1",
+                        "chunk_2"
+                    ],
+                    "precision_at_3": 0.6666666666666666,
+                    "recall_at_3": 1.0,
+                    "mrr": 1.0
+                },
+                {
+                    "question": "How does air pollution affect children?",
+                    "retrieved_chunk_ids": [
+                        "chunk_1",
+                        "chunk_0",
+                        "chunk_9"
+                    ],
+                    "relevant_chunk_ids": [
+                        "chunk_0",
+                        "chunk_2"
+                    ],
+                    "precision_at_3": 0.3333333333333333,
+                    "recall_at_3": 0.5,
+                    "mrr": 0.5
+                }
+            ]
+        }
+    ]
+}

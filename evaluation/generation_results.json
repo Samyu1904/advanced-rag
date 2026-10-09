@@ -1,0 +1,50 @@
+{
+    "gemini_used": false,
+    "results": [
+        {
+            "question": "What are the health effects of air pollution?",
+            "answer": "Air pollution can cause respiratory diseases, cardiovascular diseases, lung cancer, and other health problems.",
+            "expected_answer": "Air pollution can cause or worsen respiratory diseases, cardiovascular diseases, lung cancer, and other health problems.",
+            "faithfulness": 1.0,
+            "answer_relevance": 0.375,
+            "answer_correctness": 0.929
+        },
+        {
+            "question": "What are the causes of air pollution?",
+            "answer": "Air pollution is caused by vehicles, industries, power plants, burning of fossil fuels, and other human activities.",
+            "expected_answer": "Air pollution is caused by sources such as vehicles, industries, power plants, burning of fossil fuels, and other human activities.",
+            "faithfulness": 1.0,
+            "answer_relevance": 0.429,
+            "answer_correctness": 0.919
+        },
+        {
+            "question": "What measures can reduce exposure to air pollution?",
+            "answer": "Exposure can be reduced by avoiding polluted areas, reducing outdoor activity when pollution is high, using protective measures, and reducing emissions.",
+            "expected_answer": "Exposure can be reduced by avoiding polluted areas, reducing outdoor activity during periods of high pollution, using protective measures, and reducing emissions.",
+            "faithfulness": 1.0,
+            "answer_relevance": 0.5,
+            "answer_correctness": 0.878
+        },
+        {
+            "question": "What is particulate matter?",
+            "answer": "Particulate matter is a mixture of very small solid particles and liquid droplets suspended in the air.",
+            "expected_answer": "Particulate matter is a mixture of very small solid particles and liquid droplets suspended in the air.",
+            "faithfulness": 1.0,
+            "answer_relevance": 0.75,
+            "answer_correctness": 1.0
+        },
+        {
+            "question": "How does air pollution affect children?",
+            "answer": "Air pollution can affect children's respiratory health, impair lung development, and increase the risk of respiratory illnesses.",
+            "expected_answer": "Air pollution can affect children's respiratory health, impair lung development, and increase the risk of respiratory illnesses.",
+            "faithfulness": 1.0,
+            "answer_relevance": 0.667,
+            "answer_correctness": 1.0
+        }
+    ],
+    "overall": {
+        "faithfulness": 1.0,
+        "answer_relevance": 0.544,
+        "answer_correctness": 0.945
+    }
+}
